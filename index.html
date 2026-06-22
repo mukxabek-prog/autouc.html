@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AutoUC — Game Shop</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #070b14;
+    --bg2: #0d1526;
+    --bg3: #111d35;
+    --blue: #3b82f6;
+    --blue-glow: #1d4ed8;
+    --purple: #8b5cf6;
+    --cyan: #06b6d4;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --pink: #ec4899;
+    --text: #f1f5f9;
+    --muted: #64748b;
+    --border: rgba(255,255,255,0.07);
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* STARS */
+  .stars {
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    overflow: hidden;
+  }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle var(--d) ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.1; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.4); }
+  }
+
+  /* GLOW ORBS */
+  .orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.15;
+    pointer-events: none;
+    z-index: 0;
+    animation: drift 20s ease-in-out infinite;
+  }
+  .orb1 { width: 500px; height: 500px; background: var(--blue); top: -150px; left: -150px; }
+  .orb2 { width: 400px; height: 400px; background: var(--purple); bottom: 10%; right: -100px; animation-delay: -10s; }
+  .orb3 { width: 300px; height: 300px; background: var(--cyan); top: 50%; left: 40%; animation-delay: -5s; }
+  @keyframes drift {
+    0%, 100% { transform: translate(0, 0); }
+    33% { transform: translate(30px, -20px); }
+    66% { transform: translate(-20px, 30px); }
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(7, 11, 20, 0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .logo {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 26px; font-weight: 700;
+    letter-spacing: 2px;
+    color: white;
+  }
+  .logo span {
+    background: linear-gradient(135deg, var(--blue), var(--cyan));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-size: 14px;
+    font-weight: 500; letter-spacing: 0.5px;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: white; }
+  .nav-cta {
+    background: linear-gradient(135deg, var(--blue), var(--purple)) !important;
+    color: white !important;
+    padding: 8px 20px; border-radius: 8px;
+    font-weight: 600 !important;
+  }
+
+  /* HERO */
+  .hero {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 20px 80px;
+  }
+  .hero-content { max-width: 800px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.3);
+    color: var(--blue);
+    padding: 6px 16px; border-radius: 100px;
+    font-size: 13px; font-weight: 500; letter-spacing: 0.5px;
+    margin-bottom: 24px;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px;
+    background: var(--cyan); border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+  .hero h1 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(48px, 8vw, 90px);
+    font-weight: 700; line-height: 1;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+  }
+  .hero h1 .line1 { color: white; }
+  .hero h1 .line2 {
+    background: linear-gradient(135deg, var(--blue), var(--cyan), var(--purple));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero-sub {
+    font-size: 18px; color: var(--muted); margin: 20px 0 40px;
+    font-weight: 300; max-width: 500px; margin-left: auto; margin-right: auto;
+  }
+  .hero-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--blue), var(--purple));
+    color: white; padding: 14px 32px; border-radius: 10px;
+    font-weight: 600; font-size: 16px; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 30px rgba(59,130,246,0.3);
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(59,130,246,0.5); }
+  .btn-secondary {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white; padding: 14px 32px; border-radius: 10px;
+    font-weight: 500; font-size: 16px; text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.3); }
+
+  /* STATS */
+  .stats {
+    position: relative; z-index: 1;
+    display: flex; justify-content: center; gap: 0;
+    max-width: 700px; margin: 0 auto;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.03);
+    backdrop-filter: blur(10px);
+    margin-top: 60px;
+  }
+  .stat {
+    flex: 1; padding: 24px; text-align: center;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 36px; font-weight: 700; color: white;
+    line-height: 1;
+  }
+  .stat-num span { color: var(--blue); }
+  .stat-label { font-size: 12px; color: var(--muted); margin-top: 4px; letter-spacing: 0.5px; }
+
+  /* SECTION */
+  section {
+    position: relative; z-index: 1;
+    padding: 80px 20px;
+    max-width: 1200px; margin: 0 auto;
+  }
+  .section-label {
+    font-size: 12px; font-weight: 600; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--blue);
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: clamp(32px, 5vw, 52px); font-weight: 700;
+    color: white; line-height: 1.1; margin-bottom: 48px;
+  }
+  .section-title em { font-style: normal; color: var(--cyan); }
+
+  /* GAME CARDS */
+  .games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+  .game-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+    position: relative;
+  }
+  .game-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--card-color);
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .game-card:hover { transform: translateY(-6px); }
+  .game-card:hover::before { opacity: 1; }
+  .game-card:hover { box-shadow: 0 20px 60px rgba(0,0,0,0.4), 0 0 0 1px var(--card-color-dim); }
+
+  .card-header {
+    padding: 28px 28px 0;
+    display: flex; align-items: flex-start; justify-content: space-between;
+  }
+  .card-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    background: var(--card-color-bg);
+  }
+  .card-badge {
+    background: rgba(16,185,129,0.12);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--green);
+    font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+    padding: 4px 10px; border-radius: 100px;
+  }
+  .card-body { padding: 20px 28px 28px; }
+  .card-game { font-size: 12px; color: var(--muted); margin-bottom: 4px; letter-spacing: 0.5px; }
+  .card-title {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 24px; font-weight: 700; color: white; margin-bottom: 8px;
+  }
+  .card-desc { font-size: 14px; color: var(--muted); line-height: 1.5; margin-bottom: 20px; }
+  .card-prices {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+  }
+  .price-tag {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-size: 12px; font-weight: 500;
+    padding: 4px 10px; border-radius: 6px;
+  }
+  .price-tag strong { color: var(--card-color); }
+  .card-btn {
+    width: 100%;
+    background: var(--card-color-btn);
+    border: 1px solid var(--card-color-dim);
+    color: var(--card-color);
+    padding: 12px; border-radius: 10px;
+    font-weight: 600; font-size: 14px;
+    cursor: pointer; transition: background 0.2s;
+    text-align: center; text-decoration: none;
+    display: block;
+  }
+  .card-btn:hover { background: var(--card-color-hover); color: white; }
+
+  /* PUBG */
+  .game-card.pubg { --card-color: #3b82f6; --card-color-dim: rgba(59,130,246,0.3); --card-color-bg: rgba(59,130,246,0.1); --card-color-btn: rgba(59,130,246,0.08); --card-color-hover: rgba(59,130,246,0.8); }
+  .game-card.ff { --card-color: #f59e0b; --card-color-dim: rgba(245,158,11,0.3); --card-color-bg: rgba(245,158,11,0.1); --card-color-btn: rgba(245,158,11,0.08); --card-color-hover: rgba(245,158,11,0.8); }
+  .game-card.coc { --card-color: #10b981; --card-color-dim: rgba(16,185,129,0.3); --card-color-bg: rgba(16,185,129,0.1); --card-color-btn: rgba(16,185,129,0.08); --card-color-hover: rgba(16,185,129,0.8); }
+  .game-card.ml { --card-color: #8b5cf6; --card-color-dim: rgba(139,92,246,0.3); --card-color-bg: rgba(139,92,246,0.1); --card-color-btn: rgba(139,92,246,0.08); --card-color-hover: rgba(139,92,246,0.8); }
+  .game-card.roblox { --card-color: #ef4444; --card-color-dim: rgba(239,68,68,0.3); --card-color-bg: rgba(239,68,68,0.1); --card-color-btn: rgba(239,68,68,0.08); --card-color-hover: rgba(239,68,68,0.8); }
+
+  /* HOW IT WORKS */
+  .how-section { padding: 80px 20px; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0; position: relative; max-width: 900px; margin: 0 auto; }
+  .steps::before {
+    content: '';
+    position: absolute; top: 36px; left: 60px; right: 60px;
+    height: 1px; background: linear-gradient(90deg, transparent, var(--border), var(--border), transparent);
+  }
+  .step { text-align: center; padding: 0 20px; }
+  .step-num {
+    width: 72px; height: 72px; border-radius: 50%;
+    background: var(--bg3); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Rajdhani', sans-serif; font-size: 28px; font-weight: 700;
+    color: var(--blue); margin: 0 auto 20px;
+    position: relative; z-index: 1;
+    transition: background 0.3s, border-color 0.3s;
+  }
+  .step:hover .step-num { background: rgba(59,130,246,0.1); border-color: rgba(59,130,246,0.4); }
+  .step-icon { font-size: 24px; margin-bottom: 12px; }
+  .step h3 { font-size: 16px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .step p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* FEATURES */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 16px;
+  }
+  .feature {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px;
+    transition: border-color 0.3s;
+  }
+  .feature:hover { border-color: rgba(59,130,246,0.3); }
+  .feature-icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    background: rgba(59,130,246,0.1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 16px;
+  }
+  .feature h3 { font-size: 16px; font-weight: 600; color: white; margin-bottom: 8px; }
+  .feature p { font-size: 14px; color: var(--muted); line-height: 1.5; }
+
+  /* CTA */
+  .cta-section {
+    text-align: center; padding: 80px 20px 120px;
+    position: relative; z-index: 1;
+  }
+  .cta-box {
+    max-width: 700px; margin: 0 auto;
+    background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
+    border: 1px solid rgba(59,130,246,0.2);
+    border-radius: 28px; padding: 60px 40px;
+    position: relative; overflow: hidden;
+  }
+  .cta-box::before {
+    content: '';
+    position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(59,130,246,0.04) 0%, transparent 60%);
+    animation: rotate 20s linear infinite;
+  }
+  @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+  .cta-box h2 {
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 44px; font-weight: 700; color: white; margin-bottom: 16px;
+    position: relative;
+  }
+  .cta-box p { font-size: 17px; color: var(--muted); margin-bottom: 32px; position: relative; }
+  .cta-tg {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, #229ED9, #1a7ab5);
+    color: white; padding: 16px 36px; border-radius: 12px;
+    font-weight: 700; font-size: 17px; text-decoration: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 0 40px rgba(34,158,217,0.3);
+    position: relative;
+  }
+  .cta-tg:hover { transform: translateY(-3px); box-shadow: 0 0 60px rgba(34,158,217,0.5); }
+  .cta-tg svg { width: 22px; height: 22px; fill: white; }
+
+  /* FOOTER */
+  footer {
+    position: relative; z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 32px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 16px;
+  }
+  footer .logo { font-size: 20px; }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a { color: var(--muted); text-decoration: none; font-size: 14px; transition: color 0.2s; }
+  .footer-links a:hover { color: white; }
+  .footer-copy { font-size: 13px; color: var(--muted); }
+
+  /* SCROLL REVEAL */
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.6s, transform 0.6s; }
+  .reveal.visible { opacity: 1; transform: none; }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .stats { flex-direction: column; }
+    .stat { border-right: none; border-bottom: 1px solid var(--border); }
+    .stat:last-child { border-bottom: none; }
+    .steps::before { display: none; }
+    footer { padding: 24px 20px; }
+    .footer-links { flex-wrap: wrap; gap: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- STARS -->
+<div class="stars" id="stars"></div>
+<!-- GLOW ORBS -->
+<div class="orb orb1"></div>
+<div class="orb orb2"></div>
+<div class="orb orb3"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">AUTO<span>UC</span></div>
+  <div class="nav-links">
+    <a href="#games">O'yinlar</a>
+    <a href="#how">Qanday ishlaydi</a>
+    <a href="#features">Afzalliklar</a>
+    <a href="https://t.me/your_bot" class="nav-cta">Bot ▸</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="hero-badge">⚡ Tez yetkazib berish kafolatlangan</div>
+    <h1>
+      <div class="line1">O'yin ichida</div>
+      <div class="line2">KING bo'l</div>
+    </h1>
+    <p class="hero-sub">PUBG, Free Fire, Clash of Clans, Mobile Legends va Roblox uchun eng arzon narxlarda top-up</p>
+    <div class="hero-btns">
+      <a href="https://t.me/your_bot" class="btn-primary">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+        Botga o'tish
+      </a>
+      <a href="#games" class="btn-secondary">O'yinlarni ko'rish →</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num">500<span>+</span></div>
+        <div class="stat-label">Mamnun mijoz</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5<span>ta</span></div>
+        <div class="stat-label">Qo'llab-quvvatlanadigan o'yin</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5<span>min</span></div>
+        <div class="stat-label">O'rtacha yetkazib berish</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24<span>/7</span></div>
+        <div class="stat-label">Ishlash vaqti</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="section-label">Katalog</div>
+  <div class="section-title">Barcha <em>o'yinlar</em></div>
+  <div class="games-grid">
+
+    <div class="game-card pubg reveal">
+      <div class="card-header">
+        <div class="card-icon">🎮</div>
+        <div class="card-badge">● Mavjud</div>
+      </div>
+      <div class="card-body">
+        <div class="card-game">PUBG MOBILE</div>
+        <div class="card-title">UC — Unknown Cash</div>
+        <div class="card-desc">PUBG Mobile ichidagi rasmiy valyuta. Kiyim, silah skinlari, Royal Pass va ko'proq!</div>
+        <div class="card-prices">
+          <span class="price-tag">60 UC — <strong>15K</strong></span>
+          <span class="price-tag">325 UC — <strong>65K</strong></span>
+          <span class="price-tag">660 UC — <strong>125K</strong></span>
+          <span class="price-tag">1800 UC — <strong>320K</strong></span>
+        </div>
+        <a href="https://t.me/your_bot" class="card-btn">UC sotib olish →</a>
+      </div>
+    </div>
+
+    <div class="game-card pubg reveal" style="--card-color:#06b6d4;--card-color-dim:rgba(6,182,212,0.3);--card-color-bg:rgba(6,182,212,0.1);--card-color-btn:rgba(6,182,212,0.08);--card-color-hover:rgba(6,182,212,0.8);">
+      <div class="card-header">
+        <div class="card-icon">⭐</div>
+        <div class="card-badge">● Mavjud</div>
+      </div>
+      <div class="card-body">
+        <div class="card-game">PUBG MOBILE</div>
+        <div class="card-title">Popularity</div>
+        <div class="card-desc">Profildagi yulduzlar soni — reyting va obro'ingizni tezda oshiring!</div>
+        <div class="card-prices">
+          <span class="price-tag">100 Pop — <strong>25K</strong></span>
+          <span class="price-tag">300 Pop — <strong>70K</strong></span>
+          <span class="price-tag">600 Pop — <strong>130K</strong></span>
+          <span class="price-tag">1500 Pop — <strong>300K</strong></span>
+        </div>
+        <a href="https://t.me/your_bot" class="card-btn">Popularity olish →</a>
+      </div>
+    </div>
+
+    <div class="game-card ff reveal">
+      <div class="card-header">
+        <div class="card-icon">🔥</div>
+        <div class="card-badge">● Mavjud</div>
+      </div>
+      <div class="card-body">
+        <div class="card-game">FREE FIRE</div>
+        <div class="card-title">Diamond</div>
+        <div class="card-desc">Free Fire ning asosiy valyutasi. Teri, silah va maxsus personajlar uchun!</div>
+        <div class="card-prices">
+          <span class="price-tag">100 💎 — <strong>18K</strong></span>
+          <span class="price-tag">310 💎 — <strong>52K</strong></span>
+          <span class="price-tag">520 💎 — <strong>85K</strong></span>
+          <span class="price-tag">1060 💎 — <strong>165K</strong></span>
+        </div>
+        <a href="https://t.me/your_bot" class="card-btn">Diamond olish →</a>
+      </div>
+    </div>
+
+    <div class="game-card coc reveal">
+      <div class="card-header">
+        <div class="card-icon">⚔️</div>
+        <div class="card-badge">● Mavjud</div>
+      </div>
+      <div class="card-body">
+        <div class="card-game">CLASH OF CLANS</div>
+        <div class="card-title">Gems</div>
+        <div class="card-desc">Qishloqni tez rivojlantirish, binolarni tugatish va resurs to'ldirishda!</div>
+        <div class="card-prices">
+          <span class="price-tag">80 💎 — <strong>12K</strong></span>
+          <span class="price-tag">500 💎 — <strong>65K</strong></span>
+          <span class="price-tag">1200 💎 — <strong>150K</strong></span>
+          <span class="price-tag">2500 💎 — <strong>300K</strong></span>
+        </div>
+        <a href="https://t.me/your_bot" class="card-btn">Gems olish →</a>
+      </div>
+    </div>
+
+    <div class="game-card ml reveal">
+      <div class="card-header">
+        <div class="card-icon">🌟</div>
+        <div class="card-badge">● Mavjud</div>
+      </div>
+      <div class="card-body">
+        <div class="card-game">MOBILE LEGENDS</div>
+        <div class="card-title">Diamond</div>
+        <div class="card-desc">Hero skin, hero sotib olish va battle passlar uchun rasмiy valyuta!</div>
+        <div class="card-prices">
+          <span class="price-tag">86 💎 — <strong>20K</strong></span>
+          <span class="price-tag">172 💎 — <strong>38K</strong></span>
+          <span class="price-tag">706 💎 — <strong>145K</strong></span>
+          <span class="price-tag">1412 💎 — <strong>280K</strong></span>
+        </div>
+        <a href="https://t.me/your_bot" class="card-btn">Diamond olish →</a>
+      </div>
+    </div>
+
+    <div class="game-card roblox reveal">
+      <div class="card-header">
+        <div class="card-icon">🟥</div>
+        <div class="card-badge">● Mavjud</div>
+      </div>
+      <div class="card-body">
+        <div class="card-game">ROBLOX</div>
+        <div class="card-title">Robux</div>
+        <div class="card-desc">Roblox platformasining rasmiy valyutasi — o'yin ichida avatar va itemlar uchun!</div>
+        <div class="card-prices">
+          <span class="price-tag">400 R$ — <strong>45K</strong></span>
+          <span class="price-tag">800 R$ — <strong>85K</strong></span>
+          <span class="price-tag">1700 R$ — <strong>170K</strong></span>
+          <span class="price-tag">4500 R$ — <strong>420K</strong></span>
+        </div>
+        <a href="https://t.me/your_bot" class="card-btn">Robux olish →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="how-section" id="how">
+  <section style="padding: 0;">
+    <div class="section-label">Jarayon</div>
+    <div class="section-title" style="text-align:center;">Qanday <em>ishlaydi?</em></div>
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step-num">1</div>
+        <div class="step-icon">🤖</div>
+        <h3>Botni oching</h3>
+        <p>Telegram botimizga kiring va o'yin tanlang</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">2</div>
+        <div class="step-icon">💰</div>
+        <h3>Hisob to'ldiring</h3>
+        <p>Karta orqali pul o'tkazing, chek yuboring</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">3</div>
+        <div class="step-icon">🎯</div>
+        <h3>Buyurtma bering</h3>
+        <p>O'yin ID va nikingizni kiriting</p>
+      </div>
+      <div class="step reveal">
+        <div class="step-num">4</div>
+        <div class="step-icon">⚡</div>
+        <h3>Qabul qiling</h3>
+        <p>5-15 daqiqada akkauntingizga tushadi</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="section-label">Nima uchun biz?</div>
+  <div class="section-title">Bizning <em>afzalliklarimiz</em></div>
+  <div class="features-grid">
+    <div class="feature reveal">
+      <div class="feature-icon">⚡</div>
+      <h3>Tez yetkazib berish</h3>
+      <p>Buyurtma berilganidan so'ng 5-15 daqiqa ichida akkauntingizga tushadi. Kechikishsiz!</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">💰</div>
+      <h3>Eng arzon narxlar</h3>
+      <p>Bozordagi eng raqobatbardosh narxlar. Ko'p miqdorda — qo'shimcha chegirma!</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">🔒</div>
+      <h3>100% xavfsiz</h3>
+      <p>Parol so'ralmaydi. Faqat ID va nikingiz kerak. Akkauntingiz mutlaqo xavfsiz.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">🛡️</div>
+      <h3>Kafolat beriladi</h3>
+      <p>Har bir buyurtmaga kafolat beramiz. Muammo bo'lsa — to'liq pul qaytariladi.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">📱</div>
+      <h3>Qulay interfeys</h3>
+      <p>Telegram bot orqali istalgan joydan, istalgan vaqtda buyurtma bering.</p>
+    </div>
+    <div class="feature reveal">
+      <div class="feature-icon">💬</div>
+      <h3>24/7 Qo'llab-quvvatlash</h3>
+      <p>Admin doim liniyada. Savollaringizga tezda javob beramiz.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-box">
+    <h2>Hoziroq boshlash vaqti!</h2>
+    <p>Minglab o'yinchilar allaqachon bizni tanlagan. Siz ham qo'shiling!</p>
+    <a href="https://t.me/your_bot" class="cta-tg">
+      <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+      Telegram botga o'tish
+    </a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">AUTO<span>UC</span></div>
+  <div class="footer-links">
+    <a href="#games">O'yinlar</a>
+    <a href="#how">Qanday ishlaydi</a>
+    <a href="#features">Afzalliklar</a>
+    <a href="https://t.me/your_bot">Bot</a>
+  </div>
+  <div class="footer-copy">© 2025 AutoUC Game Shop</div>
+</footer>
+
+<script>
+// STARS
+const starsEl = document.getElementById('stars');
+for (let i = 0; i < 120; i++) {
+  const s = document.createElement('div');
+  s.className = 'star';
+  const size = Math.random() * 2.5 + 0.5;
+  s.style.cssText = `
+    width:${size}px; height:${size}px;
+    left:${Math.random()*100}%; top:${Math.random()*100}%;
+    --d:${Math.random()*4+2}s;
+    animation-delay:${Math.random()*5}s;
+  `;
+  starsEl.appendChild(s);
+}
+
+// SCROLL REVEAL
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// BOT LINK — o'z bot linkingizni qo'ying
+const BOT_LINK = 'https://t.me/your_bot';
+document.querySelectorAll('a[href="https://t.me/your_bot"]').forEach(a => a.href = BOT_LINK);
+</script>
+</body>
+</html>
