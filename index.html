@@ -722,8 +722,12 @@
             if (show) modal.classList.add('open'); else modal.classList.remove('open');
         }
 
-        // --- DINAMIK TOKEN SO'ROVI (BOT BAZASIDAN OLISH) ---
-        function onTelegramAuth(user) {
+        // ⚙️ BOT SERVER MANZILI — o'zingizning server IP/domeningizni yozing
+        // Masalan: 'http://192.168.1.100:3000' yoki 'https://sizning-server.com'
+        const BOT_API_URL = 'http://localhost:3000';
+
+        // --- TELEGRAM LOGIN CALLBACK ---
+        async function onTelegramAuth(user) {
             isAuthorized = true;
             toggleLoginModal(false);
             document.getElementById('main-login-btn').style.display = 'none';
@@ -738,21 +742,22 @@
 
             userName = user.first_name;
             userTelegramId = user.id;
-            
-            // SHU YERDA: Backend API serveringga so'rov yuboriladi
-            // localhost:5000 o'rniga o'zingning hosting/server manzilingni yozasan
-            fetch(`http://localhost:5000/api/get-balance?tg_id=${user.id}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Agar servering muvaffaqiyatli token miqdorini qaytarsa
-                    userBalance = data.tokens || 0; 
-                    document.getElementById('header-balance-val').innerText = userBalance;
-                })
-                .catch(err => {
-                    console.log("Hozircha backend ulanmagan, sinov balansi berildi.");
-                    userBalance = 1250; // API ulanmagan bo'lsa ko'rinadigan test qiymat
-                    document.getElementById('header-balance-val').innerText = userBalance;
+
+            try {
+                // Foydalanuvchini ro'yxatdan o'tkazish va tokenlarni olish
+                const regRes = await fetch(`${BOT_API_URL}/api/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(user)
                 });
+                const regData = await regRes.json();
+                userBalance = regData.tokens || 0;
+                document.getElementById('header-balance-val').innerText = userBalance;
+            } catch (err) {
+                console.log("Backend ulanmadi, 0 token berildi.");
+                userBalance = 0;
+                document.getElementById('header-balance-val').innerText = userBalance;
+            }
         }
 
         function copyToClipboard(element) {
@@ -844,7 +849,14 @@
             document.getElementById('bet-submit-btn').innerText = "Tikildi";
             addBetToPanel(userName, "ID: " + userTelegramId, amount, selectedMultiplier);
             
-            // BU YERDA: Tikilgan tokenlarni bot bazasidan ayirish uchun backendga API so'rov yuborishing mumkin
+            // Tikilgan tokenlarni bot bazasidan ayirish
+            if (userTelegramId) {
+                fetch(`${BOT_API_URL}/api/deduct-tokens`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ tg_id: userTelegramId, amount: amount })
+                }).catch(() => {});
+            }
         }
 
         function addBetToPanel(name, id, amount, chosen, status = '') {
@@ -910,7 +922,14 @@
                     let winAmount = currentBet.amount * parseInt(winningLabel);
                     userBalance += winAmount;
                     alert(`Tabriklaymiz! Siz yutdingiz: ${winAmount} TOK`);
-                    // BU YERDA: Yutuqni bazaga qo'shish API so'rovini yuborish mumkin
+                    // Yutuqni bot bazasiga qo'shish
+                    if (userTelegramId) {
+                        fetch(`${BOT_API_URL}/api/add-tokens`, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ tg_id: userTelegramId, amount: winAmount })
+                        }).catch(() => {});
+                    }
                 } else {
                     alert(`Afsus, baraban ${winningLabel} bo'ldi.`);
                 }
