@@ -3,18 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qora Sayt</title>
+    <title>Qora Sayt - Baraban bilan</title>
     <style>
-        /* Umumiy sozlamalar (Qora fon) */
+        /* --- Umumiy Sozlamalar --- */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background-color: #0b0c10;
+            background-color: #06070a;
             color: #ffffff;
             height: 100vh;
             display: flex;
@@ -23,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* 1. Kirish Animatsiyasi */
+        /* --- 1. Kirish Animatsiyasi --- */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -36,7 +36,7 @@
             justify-content: center;
             align-items: center;
             animation: fadeOut 2s forwards;
-            animation-delay: 1.5s; /* 1.5 sekund turadi keyin yo'qoladi */
+            animation-delay: 1.2s;
         }
 
         .intro-text {
@@ -45,10 +45,10 @@
             letter-spacing: 3px;
             color: #45f3ff;
             text-shadow: 0 0 15px #45f3ff;
-            animation: pulse 1.5s infinite;
+            animation: introPulse 1.2s infinite;
         }
 
-        @keyframes pulse {
+        @keyframes introPulse {
             0% { transform: scale(0.95); opacity: 0.7; }
             50% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(0.95); opacity: 0.7; }
@@ -58,59 +58,255 @@
             to { opacity: 0; visibility: hidden; }
         }
 
-        /* 2. Asosiy Kontent qismi */
+        /* --- 2. Asosiy Fon --- */
         main {
+            position: relative;
             flex-grow: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            text-align: center;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: radial-gradient(circle at 50% 50%, #1a1c23 0%, #0d0e12 50%, #050608 100%);
+            background-size: 200% 200%;
+            animation: gradientMove 8s ease infinite alternate;
         }
 
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* --- Sahifalar boshqaruvi --- */
         .page-content {
-            display: none;
-            animation: fadeInContent 0.5s ease forwards;
+            display: none; 
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease;
         }
 
         .page-content.active {
-            display: block;
+            display: flex !important;
+            animation: fadeInContent 0.5s ease forwards;
+        }
+
+        .page-content.fade-out {
+            opacity: 0;
+            transform: scale(1.05);
+            transition: all 0.5s ease;
         }
 
         @keyframes fadeInContent {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        /* Zukootiribdi rasmi uslubi */
-        .main-img {
-            max-width: 300px;
-            width: 100%;
-            border-radius: 15px;
-            box-shadow: 0 0 25px rgba(69, 243, 255, 0.2);
-            transition: transform 0.3s;
+        .content-title {
+            font-size: 2.8rem;
+            color: #ffffff;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(69, 243, 255, 0.6);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            pointer-events: none;
         }
 
-        .main-img:hover {
-            transform: scale(1.05);
-        }
-
-        h1 {
-            margin-top: 15px;
-            font-size: 1.8rem;
-            color: #45f3ff;
-        }
-
-        /* 3. Pastki 5 ta menyu (Navigation Bar) */
-        nav {
-            background: rgba(31, 40, 51, 0.95);
-            backdrop-filter: blur(10px);
-            border-top: 2px solid #45f3ff;
+        /* --- 3. BARABAN BO'LIMI INTEGRATSIYASI --- */
+        .baraban-wrapper {
             display: flex;
-            justify-content: space-around;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Chap Panel (Jonli tikishlar) */
+        .live-bets-panel {
+            width: 300px;
+            background: rgba(20, 23, 36, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 2px solid #1f2336;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            height: 100%;
+        }
+
+        .panel-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #00ff88;
+            display: flex;
+            justify-content: space-between;
             align-items: center;
-            padding: 10px 0;
-            padding-bottom: 20px; /* Telefonlar uchun qulaylik */
+        }
+
+        .bets-container {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .bet-card {
+            background: #1c2033;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .bet-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .user-name { font-weight: bold; color: #e2e8f0; }
+        .bet-time { color: #64748b; font-size: 10px; }
+        .bet-details { font-size: 11px; color: #94a3b8; }
+        .bet-amount { color: #fbbf24; font-weight: bold; }
+
+        /* O'ng tomon (Baraban markazi) */
+        .baraban-game {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 20px;
+        }
+
+        .user-balance {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: #141724;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            color: #fbbf24;
+            border: 1px solid #2e354f;
+        }
+
+        .timer-display {
+            font-size: 20px;
+            font-weight: bold;
+            background: #1c2033;
+            padding: 8px 20px;
+            border-radius: 30px;
+            border: 2px solid #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
+            margin-bottom: 20px;
+        }
+
+        .wheel-container {
+            position: relative;
+            width: 320px;
+            height: 320px;
+            margin-bottom: 25px;
+        }
+
+        .pointer {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 12px solid transparent;
+            border-right: 12px solid transparent;
+            border-top: 24px solid #ef4444;
+            z-index: 10;
+        }
+
+        .wheel {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            border: 6px solid #1f2336;
+            position: relative;
+            transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
+        }
+
+        /* Boshqaruv paneli */
+        .controls {
+            background: #141724;
+            padding: 15px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .multiplier-selector {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+
+        .mult-btn {
+            background: #1c2033;
+            border: 2px solid #2e354f;
+            color: #fff;
+            padding: 8px 0;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 13px;
+        }
+
+        .mult-btn.active {
+            border-color: #00ff88;
+            background: rgba(0, 255, 136, 0.1);
+            color: #00ff88;
+        }
+
+        .bet-inputs {
+            display: flex;
+            gap: 10px;
+        }
+
+        .token-input {
+            flex: 1;
+            background: #1c2033;
+            border: 2px solid #2e354f;
+            border-radius: 6px;
+            padding: 10px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .bet-btn {
+            background: linear-gradient(135deg, #00ff88, #00bc70);
+            color: #0f111a;
+            border: none;
+            border-radius: 6px;
+            padding: 0 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .bet-btn:disabled { opacity: 0.5; }
+
+        /* --- 4. Pastki Menyular --- */
+        nav {
+            background: rgba(10, 12, 18, 0.85);
+            backdrop-filter: blur(20px);
+            border-top: 1px solid rgba(69, 243, 255, 0.15);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            padding: 12px 0;
+            padding-bottom: 22px;
+            z-index: 20;
         }
 
         .menu-item {
@@ -119,40 +315,37 @@
             align-items: center;
             cursor: pointer;
             text-decoration: none;
-            color: #c5a880;
             transition: all 0.3s ease;
-            flex: 1;
+            width: 70px;
         }
 
-        /* To'rtburchak rasm uchun joy */
         .menu-icon {
-            width: 35px;
-            height: 35px;
+            width: 42px;
+            height: 42px;
             object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid #45f3ff;
+            border-radius: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 5px;
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
         }
 
         .menu-text {
-            font-size: 0.75rem;
-            font-weight: 600;
+            font-size: 0.7rem;
+            font-weight: bold;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            color: #8d99ae;
+            color: #646973;
+            transition: color 0.3s;
         }
 
-        /* Aktiv menyu effekti */
         .menu-item.active .menu-icon {
-            transform: scale(1.2);
-            border-color: #ff0055;
-            box-shadow: 0 0 10px #ff0055;
+            transform: scale(1.15) translateY(-3px);
+            border-color: #45f3ff;
+            box-shadow: 0 0 15px rgba(69, 243, 255, 0.6);
         }
 
         .menu-item.active .menu-text {
-            color: #ffffff;
-            text-shadow: 0 0 5px #ffffff;
+            color: #45f3ff;
         }
     </style>
 </head>
@@ -163,50 +356,79 @@
     </div>
 
     <main>
-        <div id="page-baraban" class="page-content active">
-            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
-            <h1>BARABAN BO'LIMI</h1>
+        
+        <div id="page-baraban" class="page-content">
+            <div class="baraban-wrapper">
+                <div class="live-bets-panel">
+                    <div class="panel-title">
+                        <span>Jonli Tikishlar</span>
+                        <span style="font-size: 11px; color: #64748b;">• 42 online</span>
+                    </div>
+                    <div class="bets-container" id="bets-list"></div>
+                </div>
+
+                <div class="baraban-game">
+                    <div class="user-balance">Balans: <span id="balance-val">5000</span> TOK</div>
+                    <div class="timer-display" id="timer">Aylanishga: 14s</div>
+
+                    <div class="wheel-container">
+                        <div class="pointer"></div>
+                        <canvas id="wheelCanvas" class="wheel" width="320" height="320"></canvas>
+                    </div>
+
+                    <div class="controls">
+                        <div class="multiplier-selector">
+                            <button class="mult-btn active" onclick="selectMultiplier(this, '1x')">1x</button>
+                            <button class="mult-btn" onclick="selectMultiplier(this, '2x')">2x</button>
+                            <button class="mult-btn" onclick="selectMultiplier(this, '3x')">3x</button>
+                            <button class="mult-btn" onclick="selectMultiplier(this, '4x')">4x</button>
+                            <button class="mult-btn" onclick="selectMultiplier(this, '5x')">5x</button>
+                            <button class="mult-btn" onclick="selectMultiplier(this, '50x')" style="color: #ef4444;">50x</button>
+                        </div>
+                        <div class="bet-inputs">
+                            <input type="number" id="bet-amount" class="token-input" placeholder="Token miqdori..." value="100" min="10">
+                            <button id="bet-submit-btn" class="bet-btn" onclick="placeUserBet()">Tikish</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div id="page-crash" class="page-content">
-            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
-            <h1>CRASH BO'LIMI</h1>
+            <h1 class="content-title">CRASH BO'LIMI</h1>
         </div>
 
-        <div id="page-menu" class="page-content">
-            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
-            <h1>ASOSIY MENU BO'LIMI</h1>
+        <div id="page-menu" class="page-content active">
+            <h1 class="content-title">ASOSIY MENU</h1>
         </div>
 
         <div id="page-case" class="page-content">
-            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
-            <h1>CASE BO'LIMI</h1>
+            <h1 class="content-title">CASE BO'LIMI</h1>
         </div>
 
         <div id="page-profil" class="page-content">
-            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
-            <h1>PROFIL BO'LIMI</h1>
+            <h1 class="content-title">PROFIL BO'LIMI</h1>
         </div>
     </main>
 
     <nav>
-        <div class="menu-item active" onclick="switchPage('baraban', this)">
-            <img src="baraban.jpg" alt="Baraban" class="menu-icon">
+        <div class="menu-item" onclick="switchPage('baraban', this)">
+            <img src="baraban.png" alt="Baraban" class="menu-icon">
             <span class="menu-text">Baraban</span>
         </div>
 
         <div class="menu-item" onclick="switchPage('crash', this)">
-            <img src="raketa.jpg" alt="Raketa" class="menu-icon">
+            <img src="raketa.png" alt="Raketa" class="menu-icon">
             <span class="menu-text">Crash</span>
         </div>
 
-        <div class="menu-item" onclick="switchPage('menu', this)">
-            <img src="menu.jpg" alt="Menu" class="menu-icon">
+        <div class="menu-item active" onclick="switchPage('menu', this)">
+            <img src="menu.png" alt="Menu" class="menu-icon">
             <span class="menu-text">Menu</span>
         </div>
 
         <div class="menu-item" onclick="switchPage('case', this)">
-            <img src="case.jpg" alt="Case" class="menu-icon">
+            <img src="case.png" alt="Case" class="menu-icon">
             <span class="menu-text">Case</span>
         </div>
 
@@ -217,22 +439,216 @@
     </nav>
 
     <script>
-        function switchPage(pageId, element) {
-            // Hamma sahifalarni yashirish
-            const pages = document.querySelectorAll('.page-content');
-            pages.forEach(page => page.classList.remove('active'));
+        let currentTimeout;
 
-            // Hamma menyulardan active klassini olib tashlash
+        // Sayt ilk ochilganda Menu silliq o'chishi uchun
+        window.onload = function() {
+            startFadeTimeout(document.getElementById('page-menu'));
+            drawWheel(); // Barabanni chizish
+        };
+
+        // --- Sahifalarni almashtirish funksiyasi ---
+        function switchPage(pageId, element) {
+            clearTimeout(currentTimeout);
+
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => {
+                page.classList.remove('active');
+                page.classList.remove('fade-out');
+            });
+
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => item.classList.remove('active'));
 
-            // Tanlangan sahifani ko'rsatish
-            document.getElementById('page-' + pageId).classList.add('active');
-
-            // Bosilgan menyuni aktiv qilish
+            const selectedPage = document.getElementById('page-' + pageId);
+            selectedPage.classList.add('active');
             element.classList.add('active');
-        }
-    </script>
 
+            // Baraban bo'limidan tashqari hamma bo'lim nomi 2 sekunda o'chadi
+            if (pageId !== 'baraban') {
+                startFadeTimeout(selectedPage);
+            }
+        }
+
+        function startFadeTimeout(pageElement) {
+            currentTimeout = setTimeout(() => {
+                pageElement.classList.add('fade-out');
+                setTimeout(() => {
+                    if(pageElement.classList.contains('fade-out')) {
+                        pageElement.classList.remove('active');
+                    }
+                }, 500);
+            }, 2000);
+        }
+
+        // --- BARABAN MANTIQIY KODLARI ---
+        const sectors = [
+            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '2x', color: '#3b82f6', textColor: '#fff' },
+            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '3x', color: '#10b981', textColor: '#fff' },
+            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '4x', color: '#a855f7', textColor: '#fff' },
+            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '5x', color: '#f59e0b', textColor: '#fff' },
+            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '50x', color: '#ef4444', textColor: '#fff' }
+        ];
+
+        const canvas = document.getElementById('wheelCanvas');
+        const ctx = canvas.getContext('2d');
+        const numSectors = sectors.length;
+        const arc = Math.PI * 2 / numSectors;
+
+        let currentRotation = 0;
+        let isSpinning = false;
+        let countdown = 14;
+        let selectedMultiplier = '1x';
+        let userBalance = 5000;
+        let currentBet = null;
+
+        function drawWheel() {
+            ctx.clearRect(0, 0, 320, 320);
+            for (let i = 0; i < numSectors; i++) {
+                let angle = i * arc;
+                ctx.fillStyle = sectors[i].color;
+                ctx.beginPath();
+                ctx.moveTo(160, 160);
+                ctx.arc(160, 160, 150, angle, angle + arc);
+                ctx.lineTo(160, 160);
+                ctx.fill();
+                ctx.strokeStyle = '#141724';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                ctx.save();
+                ctx.fillStyle = sectors[i].textColor;
+                ctx.translate(160, 160);
+                ctx.rotate(angle + arc / 2);
+                ctx.textAlign = "right";
+                ctx.font = "bold 14px Poppins";
+                ctx.fillText(sectors[i].label, 135, 5);
+                ctx.restore();
+            }
+        }
+
+        function selectMultiplier(btn, val) {
+            if(isSpinning) return;
+            document.querySelectorAll('.mult-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            selectedMultiplier = val;
+        }
+
+        function placeUserBet() {
+            if(isSpinning || currentBet) return;
+            const amountInput = document.getElementById('bet-amount');
+            const amount = parseInt(amountInput.value);
+
+            if(isNaN(amount) || amount <= 0 || amount > userBalance) {
+                alert("Mablag' noto'g'ri yoki yetarli emas!");
+                return;
+            }
+
+            userBalance -= amount;
+            document.getElementById('balance-val').innerText = userBalance;
+            currentBet = { amount: amount, chosen: selectedMultiplier };
+
+            document.getElementById('bet-submit-btn').disabled = true;
+            document.getElementById('bet-submit-btn').innerText = "Tikildi";
+            addBetToPanel("Siz (Muhammadjon)", "ID: 7777", amount, selectedMultiplier);
+        }
+
+        function addBetToPanel(name, id, amount, chosen, status = '') {
+            const list = document.getElementById('bets-list');
+            if(!list) return;
+            const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            const card = document.createElement('div');
+            card.className = `bet-card ${status}`;
+            card.innerHTML = `
+                <div class="bet-info">
+                    <span class="user-name">${name} <span style="font-size:9px; color:#64748b;">${id}</span></span>
+                    <span class="bet-time">${now}</span>
+                </div>
+                <div class="bet-info" style="margin:0;">
+                    <span class="bet-details">Tanlov: <b style="color:#fff">${chosen}</b></span>
+                    <span class="bet-amount">${amount} TOK</span>
+                </div>
+            `;
+            list.insertBefore(card, list.firstChild);
+            if(list.children.length > 15) list.removeChild(list.lastChild);
+        }
+
+        function simulateBotBets() {
+            if(isSpinning) return;
+            const botNames = ["Ali_Dev", "Shadow_UZ", "King_Crypto", "Ronaldo7", "Bella_01", "Sniper_Bro"];
+            const choices = ["1x", "1x", "2x", "3x", "4x", "5x"];
+            if(Math.random() > 0.4) {
+                const name = botNames[Math.floor(Math.random() * botNames.length)];
+                const id = "ID: " + Math.floor(1000 + Math.random() * 9000);
+                const amount = Math.floor(Math.random() * 5) * 100 + 50;
+                const chosen = choices[Math.floor(Math.random() * choices.length)];
+                addBetToPanel(name, id, amount, chosen);
+            }
+        }
+
+        function getRandomSectorIndex() {
+            let index = Math.floor(Math.random() * numSectors);
+            if(sectors[index].label === '50x' && Math.random() < 0.98) {
+                return getRandomSectorIndex();
+            }
+            return index;
+        }
+
+        function spinWheel() {
+            isSpinning = true;
+            document.getElementById('timer').innerText = "Aylanmoqda...";
+            const targetSectorIndex = getRandomSectorIndex();
+            const winningSector = sectors[targetSectorIndex];
+
+            const sectorAngle = 360 / numSectors;
+            const targetAngle = 270 - (targetSectorIndex * sectorAngle) - (sectorAngle / 2);
+            currentRotation += (5 * 360) + (targetAngle - (currentRotation % 360));
+
+            canvas.style.transform = `rotate(${currentRotation}deg)`;
+
+            setTimeout(() => { endRound(winningSector.label); }, 5000);
+        }
+
+        function endRound(winningLabel) {
+            isSpinning = false;
+            if(currentBet) {
+                if(currentBet.chosen === winningLabel) {
+                    let winAmount = currentBet.amount * parseInt(winningLabel);
+                    userBalance += winAmount;
+                    document.getElementById('balance-val').innerText = userBalance;
+                    alert(`Tabriklaymiz! Siz yutdingiz: ${winAmount} TOK`);
+                } else {
+                    alert(`Afsus, baraban ${winningLabel} bo'ldi.`);
+                }
+            }
+            currentBet = null;
+            document.getElementById('bet-submit-btn').disabled = false;
+            document.getElementById('bet-submit-btn').innerText = "Tikish";
+            countdown = 14;
+        }
+
+        // Tikish va taymer intervali
+        setInterval(() => {
+            // Faqat Baraban sahifasi ochiq turgandagina botlar stavka tiksin
+            const barabanPage = document.getElementById('page-baraban');
+            if(barabanPage.classList.contains('active') && !isSpinning) {
+                if(countdown > 0) {
+                    countdown--;
+                    document.getElementById('timer').innerText = `Aylanishga: ${countdown}s`;
+                    simulateBotBets();
+                } else {
+                    spinWheel();
+                }
+            } else if (!barabanPage.classList.contains('active') && !isSpinning) {
+                // Agar boshqa sahifada bo'lsak, orqada vaqt ketaveradi
+                if(countdown > 0) countdown--; else countdown = 14;
+            }
+        }, 1000);
+    </script>
 </body>
 </html>
