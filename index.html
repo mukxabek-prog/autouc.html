@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Qora Sayt - Baraban bilan</title>
+    <title>Qora Sayt - Baraban va Avtorizatsiya</title>
     <style>
         /* --- Umumiy Sozlamalar --- */
         * {
@@ -114,11 +114,196 @@
             pointer-events: none;
         }
 
+        /* --- Tepadagi Header Modullari (Tokenlar va Avtorizatsiya) --- */
+        .top-header {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .top-header * { pointer-events: auto; }
+
+        .top-tokens {
+            display: none; /* Kirguncha yashirin turadi */
+            background: rgba(20, 23, 36, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 8px 16px;
+            border-radius: 12px;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
+        }
+
+        .token-icon-gold {
+            font-size: 20px;
+            text-shadow: 0 0 10px #fbbf24;
+        }
+
+        .login-trigger-btn {
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .login-trigger-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+        }
+
+        .user-profile-header {
+            display: none; /* Muvaffaqiyatli kirgach ochiladi */
+            background: rgba(20, 23, 36, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 6px 14px;
+            border-radius: 14px;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .profile-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #3b82f6;
+            object-fit: cover;
+        }
+
+        .profile-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+        }
+
+        .copyable {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .copyable:hover {
+            color: #45f3ff;
+        }
+
+        .prof-username {
+            font-size: 13px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .prof-tgid {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* --- Login Modal (PopUp) --- */
+        .login-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 6, 8, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .login-modal-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .login-card {
+            background: #141724;
+            border: 2px solid #1f2336;
+            width: 340px;
+            padding: 30px;
+            border-radius: 24px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+            position: relative;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .login-modal-overlay.open .login-card {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px; right: 18px;
+            font-size: 22px;
+            color: #64748b;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .close-modal:hover { color: #fff; }
+
+        .zuko-img {
+            width: 150px;
+            height: auto;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
+
+        .tg-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tg-icon { width: 24px; height: 24px; }
+        .tg-text { font-size: 14px; font-weight: 500; color: #e2e8f0; }
+
+        /* Toast Bildirishnoma */
+        .toast-msg {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #00ff88;
+            color: #0f111a;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 13px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 2000;
+            pointer-events: none;
+        }
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         /* --- 3. BARABAN BO'LIMI INTEGRATSIYASI --- */
         .baraban-wrapper {
             display: flex;
             width: 100%;
             height: 100%;
+            padding-top: 80px; /* Header paneli uchun joy */
         }
 
         /* Chap Panel (Jonli tikishlar) */
@@ -181,18 +366,6 @@
             padding: 20px;
         }
 
-        .user-balance {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: #141724;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            color: #fbbf24;
-            border: 1px solid #2e354f;
-        }
-
         .timer-display {
             font-size: 20px;
             font-weight: bold;
@@ -230,7 +403,8 @@
             border-radius: 50%;
             border: 6px solid #1f2336;
             position: relative;
-            transition: transform 5s cubic-bezier(0.1, 0.8, 0.1, 1);
+            /* 10 SONIYA AYLANISH EFFEKTI */
+            transition: transform 10s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
 
         /* Boshqaruv paneli */
@@ -355,6 +529,29 @@
         <div class="intro-text">YUKLANMOQDA...</div>
     </div>
 
+    <!-- Tepadagi Dinamik Panel -->
+    <div class="top-header">
+        <div class="top-tokens" id="header-tokens-panel">
+            <span class="token-icon-gold">🪙</span>
+            <div>
+                <span style="font-size: 10px; color: #64748b; display: block; line-height: 1;">Balans</span>
+                <span id="header-balance-val" style="font-weight: 800; color: #fbbf24; font-size: 15px;">0</span>
+            </div>
+        </div>
+
+        <div id="auth-zone">
+            <button class="login-trigger-btn" id="main-login-btn" onclick="toggleLoginModal(true)">Kirish</button>
+            
+            <div class="user-profile-header" id="main-profile-panel">
+                <img src="" alt="Avatar" class="profile-avatar" id="user-avatar-img">
+                <div class="profile-details">
+                    <span class="prof-username copyable" id="user-nik-val" onclick="copyToClipboard(this)">@username</span>
+                    <span class="prof-tgid copyable" id="user-id-val" onclick="copyToClipboard(this)">ID: 0000000</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <main>
         
         <div id="page-baraban" class="page-content">
@@ -368,7 +565,6 @@
                 </div>
 
                 <div class="baraban-game">
-                    <div class="user-balance">Balans: <span id="balance-val">5000</span> TOK</div>
                     <div class="timer-display" id="timer">Aylanishga: 14s</div>
 
                     <div class="wheel-container">
@@ -438,13 +634,40 @@
         </div>
     </nav>
 
+    <!-- Avtorizatsiya Modali -->
+    <div class="login-modal-overlay" id="loginModal">
+        <div class="login-card">
+            <span class="close-modal" onclick="toggleLoginModal(false)">&times;</span>
+            <img src="zukosalom.jpg" alt="ZukoSalom" class="zuko-img">
+            <div class="tg-row">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="TG" class="tg-icon">
+                <span class="tg-text">Telegram orqali kirish</span>
+            </div>
+            <div style="display: inline-block;">
+                <!-- ALBATTA: Bu yerga o'z botingiz usernamesini yozing (@ belgisiz) -->
+                <script async src="https://telegram.org/js/telegram-widget.js?22" 
+                        data-telegram-login="YOUR_BOT_USERNAME" 
+                        data-size="large" 
+                        data-onauth="onTelegramAuth(user)" 
+                        data-request-access="write"></script>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Xabarnoma -->
+    <div class="toast-msg" id="toast">Nusxa olindi!</div>
+
     <script>
         let currentTimeout;
+        let userName = "Siz (Muhammadjon)";
+        let userTelegramId = "7777";
+        let userBalance = 5000;
 
         // Sayt ilk ochilganda Menu silliq o'chishi uchun
         window.onload = function() {
             startFadeTimeout(document.getElementById('page-menu'));
-            drawWheel(); // Barabanni chizish
+            drawWheel(); 
+            document.getElementById('header-balance-val').innerText = userBalance;
         };
 
         // --- Sahifalarni almashtirish funksiyasi ---
@@ -464,12 +687,13 @@
             selectedPage.classList.add('active');
             element.classList.add('active');
 
-            // Baraban bo'limidan tashqari hamma bo'lim nomi 2 sekunda o'chadi
+            // Baraban bo'limidan tashqari hamma bo'lim nomi 1 sekunda o'chadi
             if (pageId !== 'baraban') {
                 startFadeTimeout(selectedPage);
             }
         }
 
+        // MENYU NOMLARI 2 EMAS, 1 SEKUNDDA YOQOLISHI UCHUN SOZLANDI
         function startFadeTimeout(pageElement) {
             currentTimeout = setTimeout(() => {
                 pageElement.classList.add('fade-out');
@@ -478,7 +702,58 @@
                         pageElement.classList.remove('active');
                     }
                 }, 500);
-            }, 2000);
+            }, 1000); // 2000 dan 1000 ga o'zgartirildi (1 sek)
+        }
+
+        // --- MODAL POPUP BOSHQARUVI ---
+        function toggleLoginModal(show) {
+            const modal = document.getElementById('loginModal');
+            if (show) modal.classList.add('open'); else modal.classList.remove('open');
+        }
+
+        // --- TELEGRAM AVTORIZATSIYA ---
+        function onTelegramAuth(user) {
+            toggleLoginModal(false);
+            document.getElementById('main-login-btn').style.display = 'none';
+            document.getElementById('main-profile-panel').style.display = 'flex';
+            document.getElementById('header-tokens-panel').style.display = 'flex';
+
+            const avatarUrl = user.photo_url || "https://www.w3schools.com/howto/img_avatar.png"; 
+            document.getElementById('user-avatar-img').src = avatarUrl;
+            
+            const usernameText = user.username ? "@" + user.username : user.first_name;
+            document.getElementById('user-nik-val').innerText = usernameText;
+            document.getElementById('user-id-val').innerText = "ID: " + user.id;
+
+            userName = user.first_name;
+            userTelegramId = user.id;
+
+            loadTokensFromServer(user.id);
+        }
+
+        function loadTokensFromServer(tgId) {
+            fetch(`https://YOUR_BOT_SERVER.uz/get_balance?user_id=${tgId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if(data && data.balance !== undefined) {
+                        userBalance = data.balance;
+                        document.getElementById('header-balance-val').innerText = userBalance;
+                    }
+                })
+                .catch(err => console.error("Xatolik:", err));
+        }
+
+        // --- NUSXALASH FUNKSIYASI (COPY TO CLIPBOARD) ---
+        function copyToClipboard(element) {
+            let textToCopy = element.innerText;
+            if(textToCopy.startsWith("ID: ")) textToCopy = textToCopy.replace("ID: ", "");
+
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                const toast = document.getElementById('toast');
+                toast.innerText = `"${textToCopy}" nusxalandi!`;
+                toast.classList.add('show');
+                setTimeout(() => { toast.classList.remove('show'); }, 2000);
+            }).catch(err => console.error("Xatolik:", err));
         }
 
         // --- BARABAN MANTIQIY KODLARI ---
@@ -504,7 +779,6 @@
         let isSpinning = false;
         let countdown = 14;
         let selectedMultiplier = '1x';
-        let userBalance = 5000;
         let currentBet = null;
 
         function drawWheel() {
@@ -550,12 +824,12 @@
             }
 
             userBalance -= amount;
-            document.getElementById('balance-val').innerText = userBalance;
+            document.getElementById('header-balance-val').innerText = userBalance;
             currentBet = { amount: amount, chosen: selectedMultiplier };
 
             document.getElementById('bet-submit-btn').disabled = true;
             document.getElementById('bet-submit-btn').innerText = "Tikildi";
-            addBetToPanel("Siz (Muhammadjon)", "ID: 7777", amount, selectedMultiplier);
+            addBetToPanel(userName, "ID: " + userTelegramId, amount, selectedMultiplier);
         }
 
         function addBetToPanel(name, id, amount, chosen, status = '') {
@@ -611,7 +885,8 @@
 
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            setTimeout(() => { endRound(winningSector.label); }, 5000);
+            // TIMEOUT 5 SEKUNDDAN 10 SEKUNDGA (10000ms) O'ZGARTIRILDI
+            setTimeout(() => { endRound(winningSector.label); }, 10000);
         }
 
         function endRound(winningLabel) {
@@ -620,11 +895,11 @@
                 if(currentBet.chosen === winningLabel) {
                     let winAmount = currentBet.amount * parseInt(winningLabel);
                     userBalance += winAmount;
-                    document.getElementById('balance-val').innerText = userBalance;
                     alert(`Tabriklaymiz! Siz yutdingiz: ${winAmount} TOK`);
                 } else {
                     alert(`Afsus, baraban ${winningLabel} bo'ldi.`);
                 }
+                document.getElementById('header-balance-val').innerText = userBalance;
             }
             currentBet = null;
             document.getElementById('bet-submit-btn').disabled = false;
@@ -634,7 +909,6 @@
 
         // Tikish va taymer intervali
         setInterval(() => {
-            // Faqat Baraban sahifasi ochiq turgandagina botlar stavka tiksin
             const barabanPage = document.getElementById('page-baraban');
             if(barabanPage.classList.contains('active') && !isSpinning) {
                 if(countdown > 0) {
@@ -645,7 +919,6 @@
                     spinWheel();
                 }
             } else if (!barabanPage.classList.contains('active') && !isSpinning) {
-                // Agar boshqa sahifada bo'lsak, orqada vaqt ketaveradi
                 if(countdown > 0) countdown--; else countdown = 14;
             }
         }, 1000);
