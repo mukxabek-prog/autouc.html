@@ -40,7 +40,7 @@
         }
 
         .intro-text {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: bold;
             letter-spacing: 3px;
             color: #45f3ff;
@@ -105,21 +105,22 @@
         }
 
         .content-title {
-            font-size: 2.8rem;
+            font-size: 2rem;
             color: #ffffff;
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(69, 243, 255, 0.6);
             font-weight: 800;
             text-transform: uppercase;
             letter-spacing: 4px;
             pointer-events: none;
+            text-align: center;
         }
 
         /* --- Tepadagi Header Modullari --- */
         .top-header {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
+            top: 15px;
+            left: 15px;
+            right: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -133,16 +134,16 @@
             background: rgba(20, 23, 36, 0.85);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 255, 136, 0.2);
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 12px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
         }
 
         .token-icon-gold {
-            font-size: 20px;
+            font-size: 18px;
             text-shadow: 0 0 10px #fbbf24;
         }
 
@@ -150,17 +151,13 @@
             background: linear-gradient(135deg, #3b82f6, #1d4ed8);
             color: #fff;
             border: none;
-            padding: 10px 24px;
+            padding: 8px 18px;
             border-radius: 12px;
             font-weight: bold;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
             transition: all 0.3s ease;
-        }
-
-        .login-trigger-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            font-size: 13px;
         }
 
         .user-profile-header {
@@ -168,16 +165,16 @@
             background: rgba(20, 23, 36, 0.85);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 6px 14px;
+            padding: 4px 10px;
             border-radius: 14px;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .profile-avatar {
-            width: 40px;
-            height: 40px;
+            width: 32px;
+            height: 32px;
             border-radius: 50%;
             border: 2px solid #3b82f6;
             object-fit: cover;
@@ -189,27 +186,22 @@
             gap: 1px;
         }
 
-        .copyable {
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-
-        .copyable:hover {
-            color: #45f3ff;
-        }
-
         .prof-username {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: bold;
             color: #fff;
+            max-width: 90px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
         .prof-tgid {
-            font-size: 11px;
+            font-size: 9px;
             color: #64748b;
         }
 
-        /* --- Login Modal (PopUp) --- */
+        /* --- Login Modal --- */
         .login-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -222,6 +214,7 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
+            padding: 20px;
         }
 
         .login-modal-overlay.open {
@@ -232,8 +225,9 @@
         .login-card {
             background: #141724;
             border: 2px solid #1f2336;
-            width: 340px;
-            padding: 30px;
+            width: 100%;
+            max-width: 340px;
+            padding: 25px;
             border-radius: 24px;
             text-align: center;
             box-shadow: 0 15px 40px rgba(0,0,0,0.6);
@@ -248,20 +242,17 @@
 
         .close-modal {
             position: absolute;
-            top: 15px; right: 18px;
+            top: 12px; right: 15px;
             font-size: 22px;
             color: #64748b;
             cursor: pointer;
-            transition: color 0.2s;
         }
-        .close-modal:hover { color: #fff; }
 
         .zuko-img {
-            width: 150px;
+            width: 120px;
             height: auto;
             border-radius: 12px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .tg-row {
@@ -269,58 +260,35 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
-            margin-top: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .tg-icon { width: 24px; height: 24px; }
-        .tg-text { font-size: 14px; font-weight: 500; color: #e2e8f0; }
+        .tg-icon { width: 20px; height: 20px; }
+        .tg-text { font-size: 13px; font-weight: 500; color: #e2e8f0; }
 
-        /* Toast Bildirishnoma */
-        .toast-msg {
-            position: fixed;
-            bottom: 100px;
-            left: 50%;
-            transform: translateX(-50%) translateY(20px);
-            background: #00ff88;
-            color: #0f111a;
-            padding: 8px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            font-size: 13px;
-            opacity: 0;
-            transition: all 0.3s ease;
-            z-index: 2000;
-            pointer-events: none;
-        }
-        .toast-msg.show {
-            opacity: 1;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        /* --- BARABAN BO'LIMI INTEGRATSIYASI --- */
+        /* --- BARABAN RESPONSIVE INTEGRATSIYASI --- */
         .baraban-wrapper {
             display: flex;
             width: 100%;
             height: 100%;
-            padding-top: 80px; 
+            padding-top: 75px; 
         }
 
         .live-bets-panel {
-            width: 300px;
+            width: 260px;
             background: rgba(20, 23, 36, 0.8);
             backdrop-filter: blur(10px);
             border-right: 2px solid #1f2336;
             display: flex;
             flex-direction: column;
-            padding: 15px;
+            padding: 12px;
             height: 100%;
         }
 
         .panel-title {
-            font-size: 16px;
+            font-size: 14px;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 12px;
             color: #00ff88;
             display: flex;
             justify-content: space-between;
@@ -332,12 +300,12 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
         }
 
         .bet-card {
             background: #1c2033;
-            padding: 10px;
+            padding: 8px;
             border-radius: 8px;
             border-left: 4px solid #3b82f6;
         }
@@ -345,13 +313,13 @@
         .bet-info {
             display: flex;
             justify-content: space-between;
-            font-size: 12px;
-            margin-bottom: 5px;
+            font-size: 11px;
+            margin-bottom: 3px;
         }
 
         .user-name { font-weight: bold; color: #e2e8f0; }
-        .bet-time { color: #64748b; font-size: 10px; }
-        .bet-details { font-size: 11px; color: #94a3b8; }
+        .bet-time { color: #64748b; font-size: 9px; }
+        .bet-details { font-size: 10px; color: #94a3b8; }
         .bet-amount { color: #fbbf24; font-weight: bold; }
 
         .baraban-game {
@@ -361,37 +329,36 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            padding: 20px;
+            padding: 15px;
         }
 
         .timer-display {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: bold;
             background: #1c2033;
-            padding: 8px 20px;
+            padding: 6px 16px;
             border-radius: 30px;
             border: 2px solid #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .wheel-container {
             position: relative;
-            width: 320px;
-            height: 320px;
-            margin-bottom: 25px;
+            width: 280px;
+            height: 280px;
+            margin-bottom: 15px;
         }
 
         .pointer {
             position: absolute;
-            top: -12px;
+            top: -10px;
             left: 50%;
             transform: translateX(-50%);
             width: 0;
             height: 0;
-            border-left: 12px solid transparent;
-            border-right: 12px solid transparent;
-            border-top: 24px solid #ef4444;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 20px solid #ef4444;
             z-index: 10;
         }
 
@@ -399,36 +366,35 @@
             width: 100%;
             height: 100%;
             border-radius: 50%;
-            border: 6px solid #1f2336;
+            border: 5px solid #1f2336;
             position: relative;
             transition: transform 10s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
 
-        /* Boshqaruv paneli */
         .controls {
             background: #141724;
-            padding: 15px;
+            padding: 12px;
             border-radius: 12px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
         }
 
         .multiplier-selector {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 6px;
-            margin-bottom: 12px;
+            gap: 5px;
+            margin-bottom: 10px;
         }
 
         .mult-btn {
             background: #1c2033;
             border: 2px solid #2e354f;
             color: #fff;
-            padding: 8px 0;
+            padding: 6px 0;
             border-radius: 6px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .mult-btn.active {
@@ -439,7 +405,7 @@
 
         .bet-inputs {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .token-input {
@@ -447,10 +413,11 @@
             background: #1c2033;
             border: 2px solid #2e354f;
             border-radius: 6px;
-            padding: 10px;
+            padding: 8px;
             color: #fff;
-            font-size: 14px;
+            font-size: 13px;
             outline: none;
+            width: 50%;
         }
 
         .bet-btn {
@@ -458,13 +425,11 @@
             color: #0f111a;
             border: none;
             border-radius: 6px;
-            padding: 0 25px;
-            font-size: 14px;
+            padding: 0 18px;
+            font-size: 13px;
             font-weight: bold;
             cursor: pointer;
         }
-
-        .bet-btn:disabled { opacity: 0.5; }
 
         /* --- Pastki Menyular --- */
         nav {
@@ -474,9 +439,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 25px;
-            padding: 12px 0;
-            padding-bottom: 22px;
+            gap: 15px;
+            padding: 10px 0;
+            padding-bottom: 18px;
             z-index: 20;
         }
 
@@ -485,38 +450,105 @@
             flex-direction: column;
             align-items: center;
             cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            width: 70px;
+            width: 60px;
         }
 
         .menu-icon {
-            width: 42px;
-            height: 42px;
+            width: 36px;
+            height: 36px;
             object-fit: cover;
             border-radius: 10px;
             border: 2px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 5px;
-            transition: all 0.3s ease;
+            margin-bottom: 4px;
         }
 
         .menu-text {
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             color: #646973;
-            transition: color 0.3s;
         }
 
         .menu-item.active .menu-icon {
-            transform: scale(1.15) translateY(-3px);
+            transform: scale(1.1) translateY(-2px);
             border-color: #45f3ff;
-            box-shadow: 0 0 15px rgba(69, 243, 255, 0.6);
+            box-shadow: 0 0 10px rgba(69, 243, 255, 0.5);
         }
 
-        .menu-item.active .menu-text {
-            color: #45f3ff;
+        .menu-item.active .menu-text { color: #45f3ff; }
+
+        /* Toast */
+        .toast-msg {
+            position: fixed;
+            bottom: 90px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00ff88;
+            color: #0f111a;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 12px;
+            opacity: 0;
+            z-index: 2000;
+            transition: 0.3s;
+        }
+        .toast-msg.show { opacity: 1; }
+
+        /* ==================================================== */
+        /* --- TELEFON VA PLANSHETLAR UCHUN CSS SOZLAMALARI --- */
+        /* ==================================================== */
+        @media (max-width: 768px) {
+            body {
+                overflow-x: hidden;
+            }
+            .content-title {
+                font-size: 1.5rem;
+            }
+            /* Jonli tikishlar panelini telefonda barabanning ostiga tushiramiz yoki yashiramiz */
+            .baraban-wrapper {
+                flex-direction: column;
+                overflow-y: auto;
+                padding-top: 70px;
+                padding-bottom: 20px;
+            }
+            .live-bets-panel {
+                width: 100%;
+                height: 140px; /* Telefonda ixchamgina balandlik */
+                border-right: none;
+                border-bottom: 2px solid #1f2336;
+                order: 2; /* Barabandan keyin ko'rinishi uchun */
+                margin-top: 15px;
+            }
+            .baraban-game {
+                width: 100%;
+                order: 1;
+                padding: 5px;
+            }
+            .wheel-container {
+                width: 240px;
+                height: 240px;
+            }
+            .controls {
+                max-width: 100%;
+            }
+            .mult-btn {
+                font-size: 11px;
+                padding: 8px 0;
+            }
+            nav {
+                gap: 10px;
+            }
+            .menu-item {
+                width: 55px;
+            }
+            .menu-icon {
+                width: 32px;
+                height: 32px;
+            }
+            .top-header {
+                top: 10px; left: 10px; right: 10px;
+            }
         }
     </style>
 </head>
@@ -526,13 +558,12 @@
         <div class="intro-text">YUKLANMOQDA...</div>
     </div>
 
-    <!-- Tepadagi Dinamik Panel -->
     <div class="top-header">
         <div class="top-tokens" id="header-tokens-panel">
             <span class="token-icon-gold">🪙</span>
             <div>
-                <span style="font-size: 10px; color: #64748b; display: block; line-height: 1;">Balans</span>
-                <span id="header-balance-val" style="font-weight: 800; color: #fbbf24; font-size: 15px;">0</span>
+                <span style="font-size: 9px; color: #64748b; display: block; line-height: 1;">Balans</span>
+                <span id="header-balance-val" style="font-weight: 800; color: #fbbf24; font-size: 14px;">0</span>
             </div>
         </div>
 
@@ -555,7 +586,7 @@
                 <div class="live-bets-panel">
                     <div class="panel-title">
                         <span>Jonli Tikishlar</span>
-                        <span style="font-size: 11px; color: #64748b;">• 42 online</span>
+                        <span style="font-size: 10px; color: #64748b;">• 42 online</span>
                     </div>
                     <div class="bets-container" id="bets-list"></div>
                 </div>
@@ -577,7 +608,7 @@
                             <button class="mult-btn" onclick="selectMultiplier(this, '50x')" style="color: #ef4444;">50x</button>
                         </div>
                         <div class="bet-inputs">
-                            <input type="number" id="bet-amount" class="token-input" placeholder="Token miqdori..." value="100" min="10">
+                            <input type="number" id="bet-amount" class="token-input" placeholder="Token..." value="100" min="10">
                             <button id="bet-submit-btn" class="bet-btn" onclick="placeUserBet()">Tikish</button>
                         </div>
                     </div>
@@ -607,29 +638,24 @@
             <img src="baraban.png" alt="Baraban" class="menu-icon">
             <span class="menu-text">Baraban</span>
         </div>
-
         <div class="menu-item" onclick="switchPage('crash', this)">
             <img src="raketa.png" alt="Raketa" class="menu-icon">
             <span class="menu-text">Crash</span>
         </div>
-
         <div class="menu-item active" onclick="switchPage('menu', this)">
             <img src="menu.png" alt="Menu" class="menu-icon">
             <span class="menu-text">Menu</span>
         </div>
-
         <div class="menu-item" onclick="switchPage('case', this)">
             <img src="case.png" alt="Case" class="menu-icon">
             <span class="menu-text">Case</span>
         </div>
-
         <div class="menu-item" onclick="switchPage('profil', this)">
             <img src="PROFIL.png" alt="Profil" class="menu-icon">
             <span class="menu-text">Profil</span>
         </div>
     </nav>
 
-    <!-- Avtorizatsiya Modali -->
     <div class="login-modal-overlay" id="loginModal">
         <div class="login-card">
             <span class="close-modal" onclick="toggleLoginModal(false)">&times;</span>
@@ -639,7 +665,6 @@
                 <span class="tg-text">Telegram orqali kirish</span>
             </div>
             <div style="display: inline-block;">
-                <!-- TO'G'IRLANDI: Bot nomi @veko_uc_bot deb qat'iy sozlandi -->
                 <script async src="https://telegram.org/js/telegram-widget.js?22" 
                         data-telegram-login="veko_uc_bot" 
                         data-size="large" 
@@ -649,7 +674,6 @@
         </div>
     </div>
 
-    <!-- Toast Xabarnoma -->
     <div class="toast-msg" id="toast">Nusxa olindi!</div>
 
     <script>
@@ -668,9 +692,7 @@
         function switchPage(pageId, element) {
             clearTimeout(currentTimeout);
             const pages = document.querySelectorAll('.page-content');
-            pages.forEach(page => {
-                page.classList.remove('active', 'fade-out');
-            });
+            pages.forEach(page => page.classList.remove('active', 'fade-out'));
 
             const menuItems = document.querySelectorAll('.menu-item');
             menuItems.forEach(item => item.classList.remove('active'));
@@ -700,6 +722,7 @@
             if (show) modal.classList.add('open'); else modal.classList.remove('open');
         }
 
+        // --- DINAMIK TOKEN SO'ROVI (BOT BAZASIDAN OLISH) ---
         function onTelegramAuth(user) {
             isAuthorized = true;
             toggleLoginModal(false);
@@ -716,15 +739,25 @@
             userName = user.first_name;
             userTelegramId = user.id;
             
-            // Tizimga muvaffaqiyatli kirganda beriladigan dastlabki balans
-            userBalance = 5000; 
-            document.getElementById('header-balance-val').innerText = userBalance;
+            // SHU YERDA: Backend API serveringga so'rov yuboriladi
+            // localhost:5000 o'rniga o'zingning hosting/server manzilingni yozasan
+            fetch(`http://localhost:5000/api/get-balance?tg_id=${user.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Agar servering muvaffaqiyatli token miqdorini qaytarsa
+                    userBalance = data.tokens || 0; 
+                    document.getElementById('header-balance-val').innerText = userBalance;
+                })
+                .catch(err => {
+                    console.log("Hozircha backend ulanmagan, sinov balansi berildi.");
+                    userBalance = 1250; // API ulanmagan bo'lsa ko'rinadigan test qiymat
+                    document.getElementById('header-balance-val').innerText = userBalance;
+                });
         }
 
         function copyToClipboard(element) {
             let textToCopy = element.innerText;
             if(textToCopy.startsWith("ID: ")) textToCopy = textToCopy.replace("ID: ", "");
-
             navigator.clipboard.writeText(textToCopy).then(() => {
                 const toast = document.getElementById('toast');
                 toast.innerText = `"${textToCopy}" nusxalandi!`;
@@ -733,7 +766,6 @@
             }).catch(err => console.error(err));
         }
 
-        // --- Sektorlardan 1x butunlay chiqarib tashlandi ---
         const sectors = [
             { label: '2x', color: '#3b82f6', textColor: '#fff' },
             { label: '3x', color: '#10b981', textColor: '#fff' },
@@ -789,7 +821,6 @@
         }
 
         function placeUserBet() {
-            // Tizimga kirmagan bo'lsa tikishga yo'l qo'ymaydi
             if (!isAuthorized) {
                 alert("Tikish uchun avval Telegram orqali tizimga kiring!");
                 toggleLoginModal(true);
@@ -812,6 +843,8 @@
             document.getElementById('bet-submit-btn').disabled = true;
             document.getElementById('bet-submit-btn').innerText = "Tikildi";
             addBetToPanel(userName, "ID: " + userTelegramId, amount, selectedMultiplier);
+            
+            // BU YERDA: Tikilgan tokenlarni bot bazasidan ayirish uchun backendga API so'rov yuborishing mumkin
         }
 
         function addBetToPanel(name, id, amount, chosen, status = '') {
@@ -877,6 +910,7 @@
                     let winAmount = currentBet.amount * parseInt(winningLabel);
                     userBalance += winAmount;
                     alert(`Tabriklaymiz! Siz yutdingiz: ${winAmount} TOK`);
+                    // BU YERDA: Yutuqni bazaga qo'shish API so'rovini yuborish mumkin
                 } else {
                     alert(`Afsus, baraban ${winningLabel} bo'ldi.`);
                 }
