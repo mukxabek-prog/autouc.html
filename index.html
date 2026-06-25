@@ -23,7 +23,7 @@
             overflow: hidden;
         }
 
-        /* --- 1. Kirish Animatsiyasi --- */
+        /* --- Kirish Animatsiyasi --- */
         #intro-overlay {
             position: fixed;
             top: 0;
@@ -49,7 +49,7 @@
         }
 
         @keyframes introPulse {
-            0% { transform: scale(0.95); opacity: 0.7; }
+            0 { transform: scale(0.95); opacity: 0.7; }
             50% { transform: scale(1.05); opacity: 1; }
             100% { transform: scale(0.95); opacity: 0.7; }
         }
@@ -58,7 +58,7 @@
             to { opacity: 0; visibility: hidden; }
         }
 
-        /* --- 2. Asosiy Fon --- */
+        /* --- Asosiy Fon --- */
         main {
             position: relative;
             flex-grow: 1;
@@ -114,7 +114,7 @@
             pointer-events: none;
         }
 
-        /* --- Tepadagi Header Modullari (Tokenlar va Avtorizatsiya) --- */
+        /* --- Tepadagi Header Modullari --- */
         .top-header {
             position: absolute;
             top: 20px;
@@ -130,12 +130,12 @@
         .top-header * { pointer-events: auto; }
 
         .top-tokens {
-            display: none; /* Kirguncha yashirin turadi */
             background: rgba(20, 23, 36, 0.85);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(0, 255, 136, 0.2);
             padding: 8px 16px;
             border-radius: 12px;
+            display: flex;
             align-items: center;
             gap: 10px;
             box-shadow: 0 4px 15px rgba(0, 255, 136, 0.1);
@@ -164,7 +164,7 @@
         }
 
         .user-profile-header {
-            display: none; /* Muvaffaqiyatli kirgach ochiladi */
+            display: none; 
             background: rgba(20, 23, 36, 0.85);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -298,15 +298,14 @@
             transform: translateX(-50%) translateY(0);
         }
 
-        /* --- 3. BARABAN BO'LIMI INTEGRATSIYASI --- */
+        /* --- BARABAN BO'LIMI INTEGRATSIYASI --- */
         .baraban-wrapper {
             display: flex;
             width: 100%;
             height: 100%;
-            padding-top: 80px; /* Header paneli uchun joy */
+            padding-top: 80px; 
         }
 
-        /* Chap Panel (Jonli tikishlar) */
         .live-bets-panel {
             width: 300px;
             background: rgba(20, 23, 36, 0.8);
@@ -355,7 +354,6 @@
         .bet-details { font-size: 11px; color: #94a3b8; }
         .bet-amount { color: #fbbf24; font-weight: bold; }
 
-        /* O'ng tomon (Baraban markazi) */
         .baraban-game {
             flex: 1;
             display: flex;
@@ -403,7 +401,6 @@
             border-radius: 50%;
             border: 6px solid #1f2336;
             position: relative;
-            /* 10 SONIYA AYLANISH EFFEKTI */
             transition: transform 10s cubic-bezier(0.1, 0.8, 0.1, 1);
         }
 
@@ -418,7 +415,7 @@
 
         .multiplier-selector {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 6px;
             margin-bottom: 12px;
         }
@@ -469,7 +466,7 @@
 
         .bet-btn:disabled { opacity: 0.5; }
 
-        /* --- 4. Pastki Menyular --- */
+        /* --- Pastki Menyular --- */
         nav {
             background: rgba(10, 12, 18, 0.85);
             backdrop-filter: blur(20px);
@@ -553,7 +550,6 @@
     </div>
 
     <main>
-        
         <div id="page-baraban" class="page-content">
             <div class="baraban-wrapper">
                 <div class="live-bets-panel">
@@ -574,8 +570,7 @@
 
                     <div class="controls">
                         <div class="multiplier-selector">
-                            <button class="mult-btn active" onclick="selectMultiplier(this, '1x')">1x</button>
-                            <button class="mult-btn" onclick="selectMultiplier(this, '2x')">2x</button>
+                            <button class="mult-btn active" onclick="selectMultiplier(this, '2x')">2x</button>
                             <button class="mult-btn" onclick="selectMultiplier(this, '3x')">3x</button>
                             <button class="mult-btn" onclick="selectMultiplier(this, '4x')">4x</button>
                             <button class="mult-btn" onclick="selectMultiplier(this, '5x')">5x</button>
@@ -644,9 +639,9 @@
                 <span class="tg-text">Telegram orqali kirish</span>
             </div>
             <div style="display: inline-block;">
-                <!-- ALBATTA: Bu yerga o'z botingiz usernamesini yozing (@ belgisiz) -->
+                <!-- TO'G'IRLANDI: Bot nomi @veko_uc_bot deb qat'iy sozlandi -->
                 <script async src="https://telegram.org/js/telegram-widget.js?22" 
-                        data-telegram-login="YOUR_BOT_USERNAME" 
+                        data-telegram-login="veko_uc_bot" 
                         data-size="large" 
                         data-onauth="onTelegramAuth(user)" 
                         data-request-access="write"></script>
@@ -659,25 +654,22 @@
 
     <script>
         let currentTimeout;
-        let userName = "Siz (Muhammadjon)";
-        let userTelegramId = "7777";
-        let userBalance = 5000;
+        let isAuthorized = false; 
+        let userName = "";
+        let userTelegramId = "";
+        let userBalance = 0; 
 
-        // Sayt ilk ochilganda Menu silliq o'chishi uchun
         window.onload = function() {
             startFadeTimeout(document.getElementById('page-menu'));
             drawWheel(); 
             document.getElementById('header-balance-val').innerText = userBalance;
         };
 
-        // --- Sahifalarni almashtirish funksiyasi ---
         function switchPage(pageId, element) {
             clearTimeout(currentTimeout);
-
             const pages = document.querySelectorAll('.page-content');
             pages.forEach(page => {
-                page.classList.remove('active');
-                page.classList.remove('fade-out');
+                page.classList.remove('active', 'fade-out');
             });
 
             const menuItems = document.querySelectorAll('.menu-item');
@@ -687,13 +679,11 @@
             selectedPage.classList.add('active');
             element.classList.add('active');
 
-            // Baraban bo'limidan tashqari hamma bo'lim nomi 1 sekunda o'chadi
             if (pageId !== 'baraban') {
                 startFadeTimeout(selectedPage);
             }
         }
 
-        // MENYU NOMLARI 2 EMAS, 1 SEKUNDDA YOQOLISHI UCHUN SOZLANDI
         function startFadeTimeout(pageElement) {
             currentTimeout = setTimeout(() => {
                 pageElement.classList.add('fade-out');
@@ -702,21 +692,19 @@
                         pageElement.classList.remove('active');
                     }
                 }, 500);
-            }, 1000); // 2000 dan 1000 ga o'zgartirildi (1 sek)
+            }, 1000); 
         }
 
-        // --- MODAL POPUP BOSHQARUVI ---
         function toggleLoginModal(show) {
             const modal = document.getElementById('loginModal');
             if (show) modal.classList.add('open'); else modal.classList.remove('open');
         }
 
-        // --- TELEGRAM AVTORIZATSIYA ---
         function onTelegramAuth(user) {
+            isAuthorized = true;
             toggleLoginModal(false);
             document.getElementById('main-login-btn').style.display = 'none';
             document.getElementById('main-profile-panel').style.display = 'flex';
-            document.getElementById('header-tokens-panel').style.display = 'flex';
 
             const avatarUrl = user.photo_url || "https://www.w3schools.com/howto/img_avatar.png"; 
             document.getElementById('user-avatar-img').src = avatarUrl;
@@ -727,23 +715,12 @@
 
             userName = user.first_name;
             userTelegramId = user.id;
-
-            loadTokensFromServer(user.id);
+            
+            // Tizimga muvaffaqiyatli kirganda beriladigan dastlabki balans
+            userBalance = 5000; 
+            document.getElementById('header-balance-val').innerText = userBalance;
         }
 
-        function loadTokensFromServer(tgId) {
-            fetch(`https://YOUR_BOT_SERVER.uz/get_balance?user_id=${tgId}`)
-                .then(res => res.json())
-                .then(data => {
-                    if(data && data.balance !== undefined) {
-                        userBalance = data.balance;
-                        document.getElementById('header-balance-val').innerText = userBalance;
-                    }
-                })
-                .catch(err => console.error("Xatolik:", err));
-        }
-
-        // --- NUSXALASH FUNKSIYASI (COPY TO CLIPBOARD) ---
         function copyToClipboard(element) {
             let textToCopy = element.innerText;
             if(textToCopy.startsWith("ID: ")) textToCopy = textToCopy.replace("ID: ", "");
@@ -753,20 +730,18 @@
                 toast.innerText = `"${textToCopy}" nusxalandi!`;
                 toast.classList.add('show');
                 setTimeout(() => { toast.classList.remove('show'); }, 2000);
-            }).catch(err => console.error("Xatolik:", err));
+            }).catch(err => console.error(err));
         }
 
-        // --- BARABAN MANTIQIY KODLARI ---
+        // --- Sektorlardan 1x butunlay chiqarib tashlandi ---
         const sectors = [
-            { label: '1x', color: '#1e293b', textColor: '#fff' },
             { label: '2x', color: '#3b82f6', textColor: '#fff' },
-            { label: '1x', color: '#1e293b', textColor: '#fff' },
             { label: '3x', color: '#10b981', textColor: '#fff' },
-            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '2x', color: '#3b82f6', textColor: '#fff' },
             { label: '4x', color: '#a855f7', textColor: '#fff' },
-            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '2x', color: '#3b82f6', textColor: '#fff' },
             { label: '5x', color: '#f59e0b', textColor: '#fff' },
-            { label: '1x', color: '#1e293b', textColor: '#fff' },
+            { label: '3x', color: '#10b981', textColor: '#fff' },
             { label: '50x', color: '#ef4444', textColor: '#fff' }
         ];
 
@@ -778,7 +753,7 @@
         let currentRotation = 0;
         let isSpinning = false;
         let countdown = 14;
-        let selectedMultiplier = '1x';
+        let selectedMultiplier = '2x'; 
         let currentBet = null;
 
         function drawWheel() {
@@ -814,12 +789,19 @@
         }
 
         function placeUserBet() {
+            // Tizimga kirmagan bo'lsa tikishga yo'l qo'ymaydi
+            if (!isAuthorized) {
+                alert("Tikish uchun avval Telegram orqali tizimga kiring!");
+                toggleLoginModal(true);
+                return;
+            }
+
             if(isSpinning || currentBet) return;
             const amountInput = document.getElementById('bet-amount');
             const amount = parseInt(amountInput.value);
 
             if(isNaN(amount) || amount <= 0 || amount > userBalance) {
-                alert("Mablag' noto'g'ri yoki yetarli emas!");
+                alert("Tokenlaringiz miqdori noto'g'ri yoki yetarli emas!");
                 return;
             }
 
@@ -854,8 +836,8 @@
 
         function simulateBotBets() {
             if(isSpinning) return;
-            const botNames = ["Ali_Dev", "Shadow_UZ", "King_Crypto", "Ronaldo7", "Bella_01", "Sniper_Bro"];
-            const choices = ["1x", "1x", "2x", "3x", "4x", "5x"];
+            const botNames = ["Ali_Dev", "Shadow_UZ", "King_Crypto", "Ronaldo7", "Bella_01"];
+            const choices = ["2x", "3x", "4x", "5x"];
             if(Math.random() > 0.4) {
                 const name = botNames[Math.floor(Math.random() * botNames.length)];
                 const id = "ID: " + Math.floor(1000 + Math.random() * 9000);
@@ -885,8 +867,7 @@
 
             canvas.style.transform = `rotate(${currentRotation}deg)`;
 
-            // TIMEOUT 5 SEKUNDDAN 10 SEKUNDGA (10000ms) O'ZGARTIRILDI
-            setTimeout(() => { endRound(winningSector.label); }, 10000);
+            setTimeout(() => { endRound(winningSector.label); }, 10000); 
         }
 
         function endRound(winningLabel) {
@@ -907,7 +888,6 @@
             countdown = 14;
         }
 
-        // Tikish va taymer intervali
         setInterval(() => {
             const barabanPage = document.getElementById('page-baraban');
             if(barabanPage.classList.contains('active') && !isSpinning) {
