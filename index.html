@@ -1,332 +1,238 @@
 <!DOCTYPE html>
 <html lang="uz">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AutoUC — Game Shop</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:        #0B0E14;
-    --surface:   #131826;
-    --surface-2: #1B2233;
-    --line:      #232B3D;
-    --text:      #E8ECF4;
-    --muted:     #8B93A7;
-    --accent:    #5EE7C0;
-    --accent-dim:#234038;
-    --gold:      #FFC857;
-    --danger:    #FF6B6B;
-    --radius:    16px;
-  }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qora Sayt</title>
+    <style>
+        /* Umumiy sozlamalar (Qora fon) */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
-  *{box-sizing:border-box;}
-  html{scroll-behavior:smooth;}
-  body{
-    margin:0;
-    background:
-      radial-gradient(900px 500px at 85% -10%, rgba(94,231,192,0.10), transparent 60%),
-      radial-gradient(700px 400px at 0% 0%, rgba(255,200,87,0.06), transparent 55%),
-      var(--bg);
-    color:var(--text);
-    font-family:'Inter',system-ui,sans-serif;
-    -webkit-font-smoothing:antialiased;
-  }
-  h1,h2,h3,.display{font-family:'Space Grotesk',sans-serif;}
-  .mono{font-family:'JetBrains Mono',monospace;}
+        body {
+            background-color: #0b0c10;
+            color: #ffffff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
 
-  a{color:inherit;text-decoration:none;}
-  button{font-family:inherit;}
-  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:8px;}
+        /* 1. Kirish Animatsiyasi */
+        #intro-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeOut 2s forwards;
+            animation-delay: 1.5s; /* 1.5 sekund turadi keyin yo'qoladi */
+        }
 
-  @media (prefers-reduced-motion: reduce){
-    *{animation-duration:0.001ms !important; transition-duration:0.001ms !important;}
-  }
+        .intro-text {
+            font-size: 2.5rem;
+            font-weight: bold;
+            letter-spacing: 3px;
+            color: #45f3ff;
+            text-shadow: 0 0 15px #45f3ff;
+            animation: pulse 1.5s infinite;
+        }
 
-  /* ===== TOP BAR ===== */
-  .topbar{
-    position:sticky; top:0; z-index:50;
-    display:flex; align-items:center; justify-content:space-between;
-    gap:12px;
-    padding:14px clamp(16px,4vw,48px);
-    background:rgba(11,14,20,0.85);
-    backdrop-filter:blur(10px);
-    border-bottom:1px solid var(--line);
-  }
-  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;letter-spacing:-0.02em;}
-  .brand .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent);}
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.05); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
 
-  /* ---- auth area ---- */
-  #auth-area{display:flex;align-items:center;}
-  #tg-login-wrap{display:flex;align-items:center;}
+        @keyframes fadeOut {
+            to { opacity: 0; visibility: hidden; }
+        }
 
-  .profile-chip{
-    display:none;
-    align-items:center;
-    gap:10px;
-    padding:6px 14px 6px 6px;
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:999px;
-  }
-  .profile-chip.show{display:flex;}
-  .avatar-ring{
-    position:relative;
-    width:36px;height:36px;border-radius:50%;
-    padding:2px;
-    background:conic-gradient(from 0deg, var(--accent), var(--gold), var(--accent));
-    flex:none;
-  }
-  .avatar-ring img{
-    width:100%;height:100%;border-radius:50%;display:block;
-    border:2px solid var(--bg); object-fit:cover; background:var(--surface-2);
-  }
-  .profile-meta{display:flex; flex-direction:column; line-height:1.25;}
-  .profile-name{font-weight:600; font-size:14px;}
-  .id-row{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--muted);}
-  .copy-btn{
-    display:inline-flex; align-items:center; gap:4px;
-    background:var(--surface-2); color:var(--accent);
-    border:1px solid var(--line); border-radius:7px;
-    padding:2px 8px; font-size:12px; cursor:pointer;
-    transition:transform .15s ease, background .15s ease;
-  }
-  .copy-btn:hover{background:var(--accent-dim);}
-  .copy-btn:active{transform:scale(0.94);}
-  .copy-toast{
-    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px);
-    background:var(--surface-2); border:1px solid var(--accent);
-    color:var(--text); padding:10px 18px; border-radius:10px; font-size:14px;
-    opacity:0; pointer-events:none; transition:opacity .25s ease, transform .25s ease;
-    z-index:200;
-  }
-  .copy-toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+        /* 2. Asosiy Kontent qismi */
+        main {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
 
-  /* ===== HERO ===== */
-  .hero{
-    padding:clamp(48px,8vw,96px) clamp(16px,4vw,48px) clamp(32px,6vw,64px);
-    max-width:1100px; margin:0 auto; text-align:center;
-  }
-  .eyebrow{
-    display:inline-flex; align-items:center; gap:8px;
-    font-size:13px; color:var(--accent); border:1px solid var(--accent-dim);
-    background:rgba(94,231,192,0.06); padding:6px 14px; border-radius:999px; margin-bottom:22px;
-  }
-  .hero h1{
-    font-size:clamp(32px,6vw,56px); line-height:1.08; margin:0 0 18px; letter-spacing:-0.02em;
-  }
-  .hero h1 .accent{color:var(--accent);}
-  .hero p{color:var(--muted); font-size:clamp(15px,2vw,18px); max-width:560px; margin:0 auto 32px;}
-  .hero-ctas{display:flex; gap:14px; justify-content:center; flex-wrap:wrap;}
+        .page-content {
+            display: none;
+            animation: fadeInContent 0.5s ease forwards;
+        }
 
-  .btn{
-    display:inline-flex; align-items:center; gap:8px;
-    padding:13px 24px; border-radius:12px; font-weight:600; font-size:15px;
-    cursor:pointer; border:1px solid transparent; transition:transform .15s ease, filter .15s ease;
-  }
-  .btn:hover{transform:translateY(-2px);}
-  .btn-primary{background:var(--accent); color:#06140F;}
-  .btn-primary:hover{filter:brightness(1.08);}
-  .btn-ghost{background:transparent; border:1px solid var(--line); color:var(--text);}
-  .btn-ghost:hover{border-color:var(--accent);}
+        .page-content.active {
+            display: block;
+        }
 
-  /* ===== SECTION ===== */
-  section{padding:24px clamp(16px,4vw,48px) 64px; max-width:1180px; margin:0 auto;}
-  .section-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:24px; flex-wrap:wrap; gap:8px;}
-  .section-head h2{font-size:clamp(22px,3vw,28px); margin:0;}
-  .section-head .hint{color:var(--muted); font-size:14px;}
+        @keyframes fadeInContent {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:16px;}
-  .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
-    padding:20px; display:flex; flex-direction:column; gap:14px;
-    transition:border-color .15s ease, transform .15s ease;
-  }
-  .card:hover{border-color:var(--accent-dim); transform:translateY(-3px);}
-  .card-top{display:flex; align-items:center; gap:10px;}
-  .emoji{font-size:26px;}
-  .card-title{font-weight:600; font-size:16px;}
-  .card-sub{color:var(--muted); font-size:13px;}
-  .price-row{display:flex; align-items:center; justify-content:space-between; margin-top:auto;}
-  .price{font-family:'JetBrains Mono',monospace; color:var(--gold); font-weight:600; font-size:14px;}
-  .from{color:var(--muted); font-size:12px;}
-  .card .btn-ghost{padding:8px 14px; font-size:13px; width:100%; justify-content:center;}
+        /* Zukootiribdi rasmi uslubi */
+        .main-img {
+            max-width: 300px;
+            width: 100%;
+            border-radius: 15px;
+            box-shadow: 0 0 25px rgba(69, 243, 255, 0.2);
+            transition: transform 0.3s;
+        }
 
-  /* ===== HOW IT WORKS ===== */
-  .steps{display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px;}
-  .step{background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:20px;}
-  .step .num{font-family:'JetBrains Mono',monospace; color:var(--accent); font-size:13px; margin-bottom:8px; display:block;}
-  .step h3{margin:0 0 6px; font-size:16px;}
-  .step p{margin:0; color:var(--muted); font-size:13px; line-height:1.5;}
+        .main-img:hover {
+            transform: scale(1.05);
+        }
 
-  footer{
-    border-top:1px solid var(--line); padding:28px clamp(16px,4vw,48px);
-    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;
-    color:var(--muted); font-size:13px;
-  }
-  footer a:hover{color:var(--accent);}
+        h1 {
+            margin-top: 15px;
+            font-size: 1.8rem;
+            color: #45f3ff;
+        }
 
-  @media (max-width:520px){
-    .topbar{padding:12px 14px;}
-    .profile-meta{display:none;}
-    .profile-chip{padding:5px;}
-    .avatar-ring{width:32px;height:32px;}
-  }
-</style>
+        /* 3. Pastki 5 ta menyu (Navigation Bar) */
+        nav {
+            background: rgba(31, 40, 51, 0.95);
+            backdrop-filter: blur(10px);
+            border-top: 2px solid #45f3ff;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            padding-bottom: 20px; /* Telefonlar uchun qulaylik */
+        }
+
+        .menu-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+            color: #c5a880;
+            transition: all 0.3s ease;
+            flex: 1;
+        }
+
+        /* To'rtburchak rasm uchun joy */
+        .menu-icon {
+            width: 35px;
+            height: 35px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #45f3ff;
+            margin-bottom: 5px;
+            transition: transform 0.2s;
+        }
+
+        .menu-text {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #8d99ae;
+        }
+
+        /* Aktiv menyu effekti */
+        .menu-item.active .menu-icon {
+            transform: scale(1.2);
+            border-color: #ff0055;
+            box-shadow: 0 0 10px #ff0055;
+        }
+
+        .menu-item.active .menu-text {
+            color: #ffffff;
+            text-shadow: 0 0 5px #ffffff;
+        }
+    </style>
 </head>
 <body>
 
-  <!-- ===== TOP BAR ===== -->
-  <div class="topbar">
-    <div class="brand"><span class="dot"></span> AutoUC</div>
+    <div id="intro-overlay">
+        <div class="intro-text">YUKLANMOQDA...</div>
+    </div>
 
-    <div id="auth-area">
-      <div id="tg-login-wrap">
-        <script async src="https://telegram.org/js/telegram-widget.js?22"
-          data-telegram-login="SIZNING_BOT_USERNAME"
-          data-size="medium"
-          data-radius="20"
-          data-userpic="true"
-          data-onauth="onTelegramAuth(user)"
-          data-request-access="write"></script>
-      </div>
-
-      <div class="profile-chip" id="profile-chip">
-        <div class="avatar-ring">
-          <img id="tg-photo" src="" alt="">
+    <main>
+        <div id="page-baraban" class="page-content active">
+            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
+            <h1>BARABAN BO'LIMI</h1>
         </div>
-        <div class="profile-meta">
-          <span class="profile-name" id="tg-name">—</span>
-          <span class="id-row">
-            <span class="mono" id="tg-id">—</span>
-            <button class="copy-btn" id="copy-btn" type="button">📋 Copy</button>
-          </span>
+
+        <div id="page-crash" class="page-content">
+            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
+            <h1>CRASH BO'LIMI</h1>
         </div>
-      </div>
-    </div>
-  </div>
 
-  <!-- ===== HERO ===== -->
-  <section class="hero">
-    <span class="eyebrow">⚡ Telegram orqali — soniyalarda yetkazib berish</span>
-    <h1>O'yiningiz uchun <span class="accent">yoqilg'i</span><br>shu yerda sotiladi</h1>
-    <p>PUBG UC, Free Fire Diamond, CoC Gems, MLBB Diamond va Roblox Robux — Telegram botimiz orqali xavfsiz va tez xarid qiling.</p>
-    <div class="hero-ctas">
-      <a class="btn btn-primary" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">🤖 Botni ochish</a>
-      <a class="btn btn-ghost" href="#katalog">Mahsulotlarni ko'rish</a>
-    </div>
-  </section>
+        <div id="page-menu" class="page-content">
+            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
+            <h1>ASOSIY MENU BO'LIMI</h1>
+        </div>
 
-  <!-- ===== KATALOG ===== -->
-  <section id="katalog">
-    <div class="section-head">
-      <h2>Mahsulotlar</h2>
-      <span class="hint">Narxlar so'mda · to'liq ro'yxat botda</span>
-    </div>
-    <div class="grid">
+        <div id="page-case" class="page-content">
+            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
+            <h1>CASE BO'LIMI</h1>
+        </div>
 
-      <div class="card">
-        <div class="card-top"><span class="emoji">🎮</span><div><div class="card-title">PUBG Mobile</div><div class="card-sub">UC</div></div></div>
-        <div class="price-row"><span class="from">dan</span><span class="price">12,500 so'm</span></div>
-        <a class="btn btn-ghost" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">Xarid qilish</a>
-      </div>
+        <div id="page-profil" class="page-content">
+            <img src="zukootiribdi.jpg" alt="Zukootiribdi" class="main-img">
+            <h1>PROFIL BO'LIMI</h1>
+        </div>
+    </main>
 
-      <div class="card">
-        <div class="card-top"><span class="emoji">⭐</span><div><div class="card-title">PUBG Mobile</div><div class="card-sub">Popularity</div></div></div>
-        <div class="price-row"><span class="from">dan</span><span class="price">20,000 so'm</span></div>
-        <a class="btn btn-ghost" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">Xarid qilish</a>
-      </div>
+    <nav>
+        <div class="menu-item active" onclick="switchPage('baraban', this)">
+            <img src="baraban.jpg" alt="Baraban" class="menu-icon">
+            <span class="menu-text">Baraban</span>
+        </div>
 
-      <div class="card">
-        <div class="card-top"><span class="emoji">🔥</span><div><div class="card-title">Free Fire</div><div class="card-sub">Diamond</div></div></div>
-        <div class="price-row"><span class="from">dan</span><span class="price">18,000 so'm</span></div>
-        <a class="btn btn-ghost" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">Xarid qilish</a>
-      </div>
+        <div class="menu-item" onclick="switchPage('crash', this)">
+            <img src="raketa.jpg" alt="Raketa" class="menu-icon">
+            <span class="menu-text">Crash</span>
+        </div>
 
-      <div class="card">
-        <div class="card-top"><span class="emoji">⚔️</span><div><div class="card-title">Clash of Clans</div><div class="card-sub">Gems</div></div></div>
-        <div class="price-row"><span class="from">dan</span><span class="price">12,000 so'm</span></div>
-        <a class="btn btn-ghost" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">Xarid qilish</a>
-      </div>
+        <div class="menu-item" onclick="switchPage('menu', this)">
+            <img src="menu.jpg" alt="Menu" class="menu-icon">
+            <span class="menu-text">Menu</span>
+        </div>
 
-      <div class="card">
-        <div class="card-top"><span class="emoji">🌟</span><div><div class="card-title">Mobile Legends</div><div class="card-sub">Diamond</div></div></div>
-        <div class="price-row"><span class="from">dan</span><span class="price">20,000 so'm</span></div>
-        <a class="btn btn-ghost" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">Xarid qilish</a>
-      </div>
+        <div class="menu-item" onclick="switchPage('case', this)">
+            <img src="case.jpg" alt="Case" class="menu-icon">
+            <span class="menu-text">Case</span>
+        </div>
 
-      <div class="card">
-        <div class="card-top"><span class="emoji">🟥</span><div><div class="card-title">Roblox</div><div class="card-sub">Robux</div></div></div>
-        <div class="price-row"><span class="from">dan</span><span class="price">45,000 so'm</span></div>
-        <a class="btn btn-ghost" href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">Xarid qilish</a>
-      </div>
+        <div class="menu-item" onclick="switchPage('profil', this)">
+            <img src="PROFIL.png" alt="Profil" class="menu-icon">
+            <span class="menu-text">Profil</span>
+        </div>
+    </nav>
 
-    </div>
-  </section>
+    <script>
+        function switchPage(pageId, element) {
+            // Hamma sahifalarni yashirish
+            const pages = document.querySelectorAll('.page-content');
+            pages.forEach(page => page.classList.remove('active'));
 
-  <!-- ===== QANDAY ISHLAYDI ===== -->
-  <section>
-    <div class="section-head"><h2>Qanday ishlaydi</h2></div>
-    <div class="steps">
-      <div class="step"><span class="num">01</span><h3>Telegram bilan kiring</h3><p>Yuqoridagi tugma orqali profilingiz tasdiqlanadi — qayta ro'yxatdan o'tish kerak emas.</p></div>
-      <div class="step"><span class="num">02</span><h3>Mahsulot tanlang</h3><p>Kerakli o'yin va paketni belgilang, bot orqali davom etasiz.</p></div>
-      <div class="step"><span class="num">03</span><h3>To'lov qiling</h3><p>Chekni yuboring — admin 5–15 daqiqa ichida tasdiqlaydi.</p></div>
-      <div class="step"><span class="num">04</span><h3>Yetkazib olasiz</h3><p>Buyurtmangiz hisobingizga yoki o'yin ID'ingizga o'tkaziladi.</p></div>
-    </div>
-  </section>
+            // Hamma menyulardan active klassini olib tashlash
+            const menuItems = document.querySelectorAll('.menu-item');
+            menuItems.forEach(item => item.classList.remove('active'));
 
-  <footer>
-    <span>© 2026 AutoUC</span>
-    <span>
-      <a href="https://t.me/bulldrop_n1" target="_blank" rel="noopener">📢 Telegram kanal</a>
-      &nbsp;·&nbsp;
-      <a href="https://t.me/SIZNING_BOT_USERNAME" target="_blank" rel="noopener">🤖 Bot</a>
-    </span>
-  </footer>
+            // Tanlangan sahifani ko'rsatish
+            document.getElementById('page-' + pageId).classList.add('active');
 
-  <div class="copy-toast" id="copy-toast">Nusxalandi!</div>
-
-<script>
-  function onTelegramAuth(user) {
-    document.getElementById('tg-login-wrap').style.display = 'none';
-
-    const chip = document.getElementById('profile-chip');
-    chip.classList.add('show');
-
-    const photo = document.getElementById('tg-photo');
-    photo.src = user.photo_url || '';
-    photo.alt = user.first_name || 'Profil';
-    photo.onerror = () => { photo.src = 'data:image/svg+xml;utf8,' +
-      encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect width="40" height="40" fill="%231B2233"/><text x="50%" y="56%" font-size="18" fill="%238B93A7" text-anchor="middle" font-family="sans-serif">' + (user.first_name ? user.first_name[0] : '?') + '</text></svg>'); };
-
-    document.getElementById('tg-name').textContent =
-      user.username ? '@' + user.username : [user.first_name, user.last_name].filter(Boolean).join(' ');
-    document.getElementById('tg-id').textContent = user.id;
-
-    window.currentTgUser = user;
-  }
-
-  document.getElementById('copy-btn').addEventListener('click', () => {
-    const u = window.currentTgUser;
-    if (!u) return;
-    const text = u.username ? '@' + u.username : String(u.id);
-    navigator.clipboard.writeText(text).then(showCopyToast).catch(() => {
-      const tmp = document.createElement('textarea');
-      tmp.value = text; document.body.appendChild(tmp); tmp.select();
-      document.execCommand('copy'); document.body.removeChild(tmp);
-      showCopyToast();
-    });
-  });
-
-  function showCopyToast() {
-    const t = document.getElementById('copy-toast');
-    t.classList.add('show');
-    clearTimeout(window._toastTimer);
-    window._toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
-  }
-</script>
+            // Bosilgan menyuni aktiv qilish
+            element.classList.add('active');
+        }
+    </script>
 
 </body>
 </html>
